@@ -1,0 +1,25 @@
+meta {
+  name: Create Transaction
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/transactions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "description": "Assinatura Spotify",
+    "amount": 21.90,
+    "type": "DEPOSIT",
+    "date": "2026-01-24"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
