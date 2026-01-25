@@ -1,5 +1,6 @@
 package br.com.github.williiansilva51.zaldo.core.domain;
 
+import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +25,9 @@ public class Transaction {
     @Column(nullable = false)
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String type;
+    private TransactionType type;
 
     @Column(nullable = false)
     private LocalDate date;
