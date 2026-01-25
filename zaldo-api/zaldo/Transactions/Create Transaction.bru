@@ -19,6 +19,23 @@ body:json {
   }
 }
 
+assert {
+  res.status: eq 200
+  res.body.description: isString
+  res.body.amount: isNumber
+  res.body.id: isNumber
+}
+
+script:pre-request {
+  // Cria uma descrição com número aleatório para diferenciar
+  req.setBody({
+    "description": "Despesa Teste " + Math.floor(Math.random() * 100),
+    "amount": Number((Math.random() * 100).toFixed(2)),
+    "type": ["EXPENSE", "INCOME"][Math.floor(Math.random() * 2)],
+    "date": new Date().toISOString().split('T')[0] // Formata para YYYY-MM-DD
+  });
+}
+
 settings {
   encodeUrl: true
   timeout: 0
