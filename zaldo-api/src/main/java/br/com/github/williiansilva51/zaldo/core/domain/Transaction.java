@@ -9,12 +9,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
-@Entity(name = "transaction")
+@Entity()
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "transaction")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +35,7 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDate date;
 
-    public void validateState() throws DomainValidationException {
+    public void validateState() {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new DomainValidationException("O valor da transação deve ser positivo.");
         }
@@ -57,6 +58,8 @@ public class Transaction {
         if (newInfo.getAmount() != null) {
             amount = newInfo.getAmount();
         }
+
+        validateState();
     }
 
     public boolean isPositive() {

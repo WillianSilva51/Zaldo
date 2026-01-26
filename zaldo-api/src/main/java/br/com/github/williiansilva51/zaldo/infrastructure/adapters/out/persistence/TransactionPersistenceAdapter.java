@@ -27,6 +27,11 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
     }
 
     @Override
+    public List<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date) {
+        return springDataTransactionRepository.findByTypeAndDate(type, date);
+    }
+
+    @Override
     public List<Transaction> findByTransactionType(TransactionType type) {
         return springDataTransactionRepository.findByType(type);
     }

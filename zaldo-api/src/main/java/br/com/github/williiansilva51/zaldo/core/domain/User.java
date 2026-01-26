@@ -3,12 +3,13 @@ package br.com.github.williiansilva51.zaldo.core.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "users")
+@Entity()
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -11,4 +11,6 @@ public interface SpringDataTransactionRepository extends JpaRepository<Transacti
     List<Transaction> findByType(TransactionType type);
 
     List<Transaction> findByDate(LocalDate date);
+
+    List<Transaction> findByTypeAndDate(TransactionType type, LocalDate date);
 }
