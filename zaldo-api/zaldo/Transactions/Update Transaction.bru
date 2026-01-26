@@ -1,0 +1,33 @@
+meta {
+  name: Update Transaction
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/transactions/{{transaction_id}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "description": "Assinatura Spotify Premium",
+    "amount": 25.90, 
+    "type": "EXPENSE",
+    "date": "2026-01-25"
+  }
+}
+
+vars:pre-request {
+  transaction_id: 4
+}
+
+assert {
+  res.status: eq 200
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

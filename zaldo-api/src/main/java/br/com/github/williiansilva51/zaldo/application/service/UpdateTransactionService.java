@@ -1,0 +1,29 @@
+package br.com.github.williiansilva51.zaldo.application.service;
+
+import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
+import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
+import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.UpdateTransactionUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.out.TransactionRepositoryPort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class UpdateTransactionService implements UpdateTransactionUseCase {
+    private final TransactionRepositoryPort transactionRepositoryPort;
+
+    @Override
+    public Transaction execute(Long id, Transaction transaction) throws ResourceNotFoundException, IllegalArgumentException {
+        Transaction existingTransaction = transactionRepositoryPort
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transação não encontrada para atualização: " + id));
+
+        existingTransaction.update(transaction);
+
+        if (!existingTransaction.isPositive()) {
+            throw new IllegalArgumentException("A transação não pode ter valor negativo ou zero após atualização.");
+        }
+
+        return transactionRepositoryPort.save(existingTransaction);
+    }
+}

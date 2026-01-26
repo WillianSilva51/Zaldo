@@ -2,12 +2,22 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mappe
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.CreateTransactionRequest;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.UpdateTransactionRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.TransactionResponse;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionMapper {
+public class TransactionMapper implements Mapper<Transaction, CreateTransactionRequest, TransactionResponse> {
     public Transaction toDomain(CreateTransactionRequest request) {
+        return Transaction.builder()
+                .description(request.description())
+                .amount(request.amount())
+                .type(request.type())
+                .date(request.date())
+                .build();
+    }
+
+    public Transaction toDomain(UpdateTransactionRequest request) {
         return Transaction.builder()
                 .description(request.description())
                 .amount(request.amount())

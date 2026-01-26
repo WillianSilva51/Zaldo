@@ -1,18 +1,17 @@
 meta {
-  name: Get All Transaction
+  name: Find Transaction By Id
   type: http
-  seq: 2
+  seq: 3
 }
 
 get {
-  url: {{baseUrl}}/transactions?type&date
+  url: {{baseUrl}}/transactions/{{transactionId}}
   body: none
   auth: inherit
 }
 
-params:query {
-  type: 
-  date: 
+vars:pre-request {
+  transactionId: 1
 }
 
 assert {

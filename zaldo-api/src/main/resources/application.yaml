@@ -25,7 +25,7 @@ spring:
       indent_output: true
 
   # Docker Compose Support
-  # Isso garante que o Spring leia o ocker-compose.yml na raiz e suba o banco sozinho
+  # Isso garante que o Spring leia o docker-compose.yml na raiz e suba o banco sozinho
   docker:
     compose:
       enabled: false

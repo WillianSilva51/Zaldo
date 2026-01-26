@@ -1,0 +1,24 @@
+meta {
+  name: Delete Transaction By Id
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/transactions/{{transactionId}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  transactionId: 1
+}
+
+assert {
+  res.status: eq 204
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
