@@ -34,7 +34,7 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDate date;
 
-    public void validateState() {
+    public void validateState() throws DomainValidationException {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new DomainValidationException("O valor da transação deve ser positivo.");
         }

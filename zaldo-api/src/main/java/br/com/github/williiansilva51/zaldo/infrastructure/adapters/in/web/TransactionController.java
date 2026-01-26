@@ -2,8 +2,10 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
-import br.com.github.williiansilva51.zaldo.core.ports.in.CreateTransactionUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.ListTransactionUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.CreateTransactionUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.DeleteTransactionByIdUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.FindTransactionByIdUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.ListTransactionUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.CreateTransactionRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.TransactionResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper.TransactionMapper;
@@ -17,11 +19,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
     private final CreateTransactionUseCase createTransactionUseCase;
     private final ListTransactionUseCase listTransactionUseCase;
+    private final FindTransactionByIdUseCase findTransactionByIdUseCase;
+    private final DeleteTransactionByIdUseCase deleteTransactionByIdUseCase;
     private final TransactionMapper transactionMapper;
 
     @PostMapping
@@ -45,5 +49,19 @@ public class TransactionController {
                 .toList();
 
         return ResponseEntity.ok(responseList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionResponse> getTransactionById(@PathVariable Long id) {
+        Transaction transaction = findTransactionByIdUseCase.execute(id);
+
+        return ResponseEntity.ok(transactionMapper.toResponse(transaction));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransactionById(@PathVariable Long id) {
+        deleteTransactionByIdUseCase.execute(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

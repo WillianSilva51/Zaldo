@@ -6,7 +6,7 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.re
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionMapper {
+public class TransactionMapper implements Mapper<Transaction, CreateTransactionRequest, TransactionResponse> {
     public Transaction toDomain(CreateTransactionRequest request) {
         return Transaction.builder()
                 .description(request.description())

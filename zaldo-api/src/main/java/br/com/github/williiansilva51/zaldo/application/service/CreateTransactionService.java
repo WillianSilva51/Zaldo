@@ -1,7 +1,7 @@
 package br.com.github.williiansilva51.zaldo.application.service;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
-import br.com.github.williiansilva51.zaldo.core.ports.in.CreateTransactionUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.CreateTransactionUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.out.TransactionRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
