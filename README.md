@@ -3,7 +3,9 @@
 > **Zaldo** (do latim *Saldo* com um toque moderno) é um Bot de Finanças Pessoais para Telegram de alto desempenho, alimentado por uma API REST robusta.
 
 ## 📜 Descrição
-    Gerencie suas finanças pessoais diretamente do Telegram com o Zaldo! Registre despesas, receitas e visualize seu saldo em tempo real através de comandos simples. A API REST por trás do bot é construída com Spring Boot, garantindo escalabilidade e facilidade de manutenção.
+
+Gerencie suas finanças pessoais diretamente do Telegram com o Zaldo! Registre despesas, receitas e visualize seu saldo em tempo real através de comandos simples. A API REST por trás do bot é construída com Spring Boot, garantindo escalabilidade e facilidade de manutenção.
+
 ---
 
 ## 🚀 Tech Stack & Arquitetura
