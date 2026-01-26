@@ -44,6 +44,21 @@ public class Transaction {
         }
     }
 
+    public void update(Transaction newInfo) {
+        if (newInfo.getDescription() != null) {
+            description = newInfo.getDescription();
+        }
+        if (newInfo.getType() != null) {
+            type = newInfo.getType();
+        }
+        if (newInfo.getDate() != null) {
+            date = newInfo.getDate();
+        }
+        if (newInfo.getAmount() != null) {
+            amount = newInfo.getAmount();
+        }
+    }
+
     public boolean isPositive() {
         return amount != null && amount.compareTo(BigDecimal.ZERO) > 0;
     }

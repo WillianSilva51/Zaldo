@@ -14,7 +14,6 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class TransactionPersistenceAdapter implements TransactionRepositoryPort {
-
     private final SpringDataTransactionRepository springDataTransactionRepository;
 
     @Override
