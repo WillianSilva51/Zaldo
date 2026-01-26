@@ -5,9 +5,14 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/transactions
+  url: {{baseUrl}}/transaction?type&date
   body: none
   auth: inherit
+}
+
+params:query {
+  type: 
+  date: 
 }
 
 settings {

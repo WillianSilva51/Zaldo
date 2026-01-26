@@ -1,12 +1,9 @@
 package br.com.github.williiansilva51.zaldo.core.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
+@Entity(name = "wallet")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,5 +12,6 @@ import lombok.*;
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "wallet_id")
     private Long id;
 }
