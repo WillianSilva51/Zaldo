@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionMapper implements Mapper<Transaction, CreateTransactionRequest, TransactionResponse, UpdateTransactionRequest> {
+    @Override
     public Transaction toDomain(CreateTransactionRequest request) {
         return Transaction.builder()
                 .description(request.description())
@@ -17,6 +18,7 @@ public class TransactionMapper implements Mapper<Transaction, CreateTransactionR
                 .build();
     }
 
+    @Override
     public Transaction toDomainByUpdate(UpdateTransactionRequest request) {
         return Transaction.builder()
                 .description(request.description())
@@ -26,6 +28,7 @@ public class TransactionMapper implements Mapper<Transaction, CreateTransactionR
                 .build();
     }
 
+    @Override
     public TransactionResponse toResponse(Transaction transaction) {
         return new TransactionResponse(
                 transaction.getId(),

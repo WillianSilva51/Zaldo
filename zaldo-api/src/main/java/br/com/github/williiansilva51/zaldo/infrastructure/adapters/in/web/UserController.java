@@ -30,7 +30,7 @@ public class UserController {
 
         User created = createUserService.execute(domainObj);
 
-        return ResponseEntity.created(URI.create("/users/")).body(userMapper.toResponse(created));
+        return ResponseEntity.created(URI.create("/users/" + created.getId())).body(userMapper.toResponse(created));
     }
 
     @GetMapping("/{id}")

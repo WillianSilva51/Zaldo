@@ -14,7 +14,6 @@ public class FindUserByIdService implements FindUserByIdUseCase {
 
     @Override
     public User execute(String id) {
-
         return userRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado: " + id));
     }

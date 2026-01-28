@@ -19,6 +19,17 @@ public class UpdateUserService implements UpdateUserUseCase {
         User existingUser = userRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado para atualização: " + id));
 
+        String newEmail = user.getEmail();
+        if (newEmail != null && !newEmail.equals(existingUser.getEmail())) {
+            userRepositoryPort.findByEmail(newEmail)
+                    .filter(foundUser -> !foundUser.getId().equals(id))
+                    .ifPresent(foundUser -> {
+                        throw new IllegalArgumentException("Email já está em uso: " + newEmail);
+                    });
+        }
+
+        // TODO: Futuramente aqui entra o Hash da Senha (BCrypt)
+
         existingUser.update(user);
 
         return userRepositoryPort.save(existingUser);
