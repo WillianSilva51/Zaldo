@@ -34,6 +34,11 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public List<User> findByEmailContaining(String emailFragment) {
+        return springDataUserRepository.findByEmailContaining(emailFragment);
+    }
+
+    @Override
     public void deleteById(String id) {
         springDataUserRepository.deleteById(id);
     }

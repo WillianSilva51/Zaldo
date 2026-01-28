@@ -14,5 +14,7 @@ public interface UserRepositoryPort {
 
     Optional<User> findByEmail(String email);
 
+    List<User> findByEmailContaining(String emailFragment);
+
     void deleteById(String id);
 }

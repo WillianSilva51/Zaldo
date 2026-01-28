@@ -35,8 +35,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> listAllUsers() {
-        List<UserResponse> responseList = listUsersService.execute()
+    public ResponseEntity<List<UserResponse>> listAllUsers(@RequestParam(required = false) String emailFragment) {
+        List<UserResponse> responseList = listUsersService.execute(emailFragment)
                 .stream()
                 .map(userMapper::toResponse)
                 .toList();

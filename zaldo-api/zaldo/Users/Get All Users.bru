@@ -5,9 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/users
+  url: {{baseUrl}}/users?emailFragment
   body: none
   auth: inherit
+}
+
+params:query {
+  emailFragment: 
 }
 
 assert {
