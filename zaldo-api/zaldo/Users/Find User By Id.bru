@@ -1,0 +1,20 @@
+meta {
+  name: Find User By Id
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/users/{{id_user}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  id_user: 
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

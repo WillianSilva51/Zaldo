@@ -5,6 +5,7 @@ import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -15,6 +16,11 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
     @Override
     public User save(User user) {
         return springDataUserRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return springDataUserRepository.findAll();
     }
 
     @Override

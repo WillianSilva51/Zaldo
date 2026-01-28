@@ -1,9 +1,6 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
-import br.com.github.williiansilva51.zaldo.application.service.user.CreateUserService;
-import br.com.github.williiansilva51.zaldo.application.service.user.DeleteUserByIdService;
-import br.com.github.williiansilva51.zaldo.application.service.user.FindUserByIdService;
-import br.com.github.williiansilva51.zaldo.application.service.user.UpdateUserService;
+import br.com.github.williiansilva51.zaldo.application.service.user.*;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.user.CreateUserRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.user.UpdateUserRequest;
@@ -15,12 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     private final CreateUserService createUserService;
+    private final ListUsersService listUsersService;
     private final FindUserByIdService findUserByIdService;
     private final UpdateUserService updateUserService;
     private final DeleteUserByIdService deleteUserByIdService;
@@ -33,6 +32,16 @@ public class UserController {
         User created = createUserService.execute(domainObj);
 
         return ResponseEntity.created(URI.create("/users/" + created.getId())).body(userMapper.toResponse(created));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> listAllUsers() {
+        List<UserResponse> responseList = listUsersService.execute()
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+
+        return ResponseEntity.ok(responseList);
     }
 
     @GetMapping("/{id}")
