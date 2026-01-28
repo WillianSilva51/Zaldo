@@ -1,17 +1,17 @@
 meta {
-  name: Delete Transaction By Id
+  name: Delete User By Id
   type: http
   seq: 5
 }
 
 delete {
-  url: {{baseUrl}}/transactions/{{transactionId}}
+  url: {{baseUrl}}/users/{{id_user}}
   body: none
   auth: inherit
 }
 
 vars:pre-request {
-  transactionId: 1
+  id_user: 
 }
 
 assert {

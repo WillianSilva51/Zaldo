@@ -1,8 +1,6 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
-import br.com.github.williiansilva51.zaldo.application.service.user.CreateUserService;
-import br.com.github.williiansilva51.zaldo.application.service.user.FindUserByIdService;
-import br.com.github.williiansilva51.zaldo.application.service.user.UpdateUserService;
+import br.com.github.williiansilva51.zaldo.application.service.user.*;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.user.CreateUserRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.user.UpdateUserRequest;
@@ -14,14 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
     private final CreateUserService createUserService;
+    private final ListUsersService listUsersService;
     private final FindUserByIdService findUserByIdService;
     private final UpdateUserService updateUserService;
+    private final DeleteUserByIdService deleteUserByIdService;
     private final UserMapper userMapper;
 
     @PostMapping
@@ -30,7 +31,17 @@ public class UserController {
 
         User created = createUserService.execute(domainObj);
 
-        return ResponseEntity.created(URI.create("/users/")).body(userMapper.toResponse(created));
+        return ResponseEntity.created(URI.create("/users/" + created.getId())).body(userMapper.toResponse(created));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> listAllUsers(@RequestParam(required = false) String emailFragment) {
+        List<UserResponse> responseList = listUsersService.execute(emailFragment)
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+
+        return ResponseEntity.ok(responseList);
     }
 
     @GetMapping("/{id}")
@@ -49,4 +60,10 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toResponse(updated));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
+        deleteUserByIdService.execute(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
