@@ -12,6 +12,7 @@ import java.util.Optional;
 public class UserPersistenceAdapter implements UserRepositoryPort {
     private final SpringDataUserRepository springDataUserRepository;
 
+    @Override
     public User save(User user) {
         return springDataUserRepository.save(user);
     }
@@ -24,5 +25,10 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
     @Override
     public Optional<User> findByEmail(String email) {
         return springDataUserRepository.findByEmail(email);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        springDataUserRepository.deleteById(id);
     }
 }

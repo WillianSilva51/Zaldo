@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
 import br.com.github.williiansilva51.zaldo.application.service.user.CreateUserService;
+import br.com.github.williiansilva51.zaldo.application.service.user.DeleteUserByIdService;
 import br.com.github.williiansilva51.zaldo.application.service.user.FindUserByIdService;
 import br.com.github.williiansilva51.zaldo.application.service.user.UpdateUserService;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
@@ -22,6 +23,7 @@ public class UserController {
     private final CreateUserService createUserService;
     private final FindUserByIdService findUserByIdService;
     private final UpdateUserService updateUserService;
+    private final DeleteUserByIdService deleteUserByIdService;
     private final UserMapper userMapper;
 
     @PostMapping
@@ -49,4 +51,10 @@ public class UserController {
         return ResponseEntity.ok(userMapper.toResponse(updated));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
+        deleteUserByIdService.execute(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
