@@ -4,6 +4,7 @@ import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.UpdateUserUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class UpdateUserService implements UpdateUserUseCase {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
+    @Transactional
     public User execute(String id, User user) {
         User existingUser = userRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado para atualização: " + id));

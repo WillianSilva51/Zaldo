@@ -3,15 +3,17 @@ package br.com.github.williiansilva51.zaldo.core.domain;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.core.exceptions.DomainValidationException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
-@Entity()
+@Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
