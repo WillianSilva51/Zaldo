@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.application.service;
+package br.com.github.williiansilva51.zaldo.application.service.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
@@ -17,6 +17,10 @@ public class ListTransactionService implements ListTransactionUseCase {
 
     @Override
     public List<Transaction> execute(TransactionType type, LocalDate date) {
+        if (type != null && date != null) {
+            return transactionRepositoryPort.findByTransactionTypeAndDate(type, date);
+        }
+
         if (type != null) {
             return transactionRepositoryPort.findByTransactionType(type);
         }

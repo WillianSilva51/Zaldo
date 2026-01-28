@@ -1,0 +1,35 @@
+meta {
+  name: Update User
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/users/{{id_user}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Francisco",
+    "email": "francs@gmal.com",
+    "password": "senhadificil"
+  }
+}
+
+vars:pre-request {
+  id_user: 
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: isString
+  res.body.name: isString
+  res.body.email: isString
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

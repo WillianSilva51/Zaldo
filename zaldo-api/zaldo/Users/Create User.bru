@@ -1,0 +1,43 @@
+meta {
+  name: Create User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/users
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Francisco",
+    "email": "francs@gmal.com",
+    "password": "senhadificil"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.id: isString
+  res.body.name: isString
+  res.body.email: isString
+}
+
+script:pre-request {
+  // Gera um número aleatório para evitar conflito de dados
+  const random = Math.floor(Math.random() * 100000);
+  
+  req.setBody({
+    name: `Usuario Teste ${random}`,
+    email: `usuario.teste.${random}@gmail.com`,
+    password: "Teste@123456"
+  });
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

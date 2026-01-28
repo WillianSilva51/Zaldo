@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
@@ -24,6 +24,11 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
     @Override
     public List<Transaction> findAll() {
         return springDataTransactionRepository.findAll();
+    }
+
+    @Override
+    public List<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date) {
+        return springDataTransactionRepository.findByTypeAndDate(type, date);
     }
 
     @Override

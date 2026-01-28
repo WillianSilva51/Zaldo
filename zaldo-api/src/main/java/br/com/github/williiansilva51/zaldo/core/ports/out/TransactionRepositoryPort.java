@@ -12,6 +12,8 @@ public interface TransactionRepositoryPort {
 
     List<Transaction> findAll();
 
+    List<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date);
+
     List<Transaction> findByTransactionType(TransactionType type);
 
     List<Transaction> findByDate(LocalDate date);

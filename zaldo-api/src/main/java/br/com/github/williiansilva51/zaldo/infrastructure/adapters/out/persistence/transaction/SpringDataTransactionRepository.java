@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
@@ -11,4 +11,6 @@ public interface SpringDataTransactionRepository extends JpaRepository<Transacti
     List<Transaction> findByType(TransactionType type);
 
     List<Transaction> findByDate(LocalDate date);
+
+    List<Transaction> findByTypeAndDate(TransactionType type, LocalDate date);
 }

@@ -6,8 +6,8 @@
     "node_modules",
     ".git"
   ],
-  "size": 0.0016307830810546875,
-  "filesCount": 6,
+  "size": 0.0020208358764648438,
+  "filesCount": 8,
   "presets": {
     "requestType": "http",
     "requestUrl": "http://localhost:8080"

@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.application.service;
+package br.com.github.williiansilva51.zaldo.application.service.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
