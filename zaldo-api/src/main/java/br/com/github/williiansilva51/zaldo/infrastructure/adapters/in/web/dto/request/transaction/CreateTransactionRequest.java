@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import jakarta.validation.constraints.NotBlank;

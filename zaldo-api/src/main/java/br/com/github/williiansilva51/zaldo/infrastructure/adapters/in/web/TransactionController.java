@@ -3,8 +3,8 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.*;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.CreateTransactionRequest;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.UpdateTransactionRequest;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.CreateTransactionRequest;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.UpdateTransactionRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.TransactionResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper.TransactionMapper;
 import jakarta.validation.Valid;
@@ -66,7 +66,7 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TransactionResponse> updateTransaction(@PathVariable Long id, @RequestBody @Valid UpdateTransactionRequest request) {
-        Transaction newInfo = transactionMapper.toDomain(request);
+        Transaction newInfo = transactionMapper.toDomainByUpdate(request);
 
         Transaction updated = updateTransactionUseCase.execute(id, newInfo);
 

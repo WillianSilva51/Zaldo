@@ -1,7 +1,9 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper;
 
-public interface Mapper<D, Req, Res> {
+public interface Mapper<D, Req, CRes, URes> {
     D toDomain(Req request);
 
-    Res toResponse(D domain);
+    D toDomainByUpdate(URes request);
+
+    CRes toResponse(D domain);
 }

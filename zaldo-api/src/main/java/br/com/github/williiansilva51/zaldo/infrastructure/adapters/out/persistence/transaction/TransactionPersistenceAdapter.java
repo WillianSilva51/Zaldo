@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;

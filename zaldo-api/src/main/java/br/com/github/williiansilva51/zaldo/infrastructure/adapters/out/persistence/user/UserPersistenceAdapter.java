@@ -1,0 +1,28 @@
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.user;
+
+import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
+@Component
+@RequiredArgsConstructor
+public class UserPersistenceAdapter implements UserRepositoryPort {
+    private final SpringDataUserRepository springDataUserRepository;
+
+    public User save(User user) {
+        return springDataUserRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findById(String id) {
+        return springDataUserRepository.findById(id);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return springDataUserRepository.findByEmail(email);
+    }
+}
