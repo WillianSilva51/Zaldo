@@ -1,5 +1,6 @@
 package br.com.github.williiansilva51.zaldo.application.service.transaction;
 
+import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.ListTransactionUseCase;
@@ -8,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,19 +16,19 @@ public class ListTransactionService implements ListTransactionUseCase {
     private final TransactionRepositoryPort transactionRepositoryPort;
 
     @Override
-    public List<Transaction> execute(TransactionType type, LocalDate date) {
+    public Paginated<Transaction> execute(TransactionType type, LocalDate date, int page, int size, String sort, String direction) {
         if (type != null && date != null) {
-            return transactionRepositoryPort.findByTransactionTypeAndDate(type, date);
+            return transactionRepositoryPort.findByTransactionTypeAndDate(type, date, page, size, sort, direction);
         }
 
         if (type != null) {
-            return transactionRepositoryPort.findByTransactionType(type);
+            return transactionRepositoryPort.findByTransactionType(type, page, size, sort, direction);
         }
 
         if (date != null) {
-            return transactionRepositoryPort.findByDate(date);
+            return transactionRepositoryPort.findByDate(date, page, size, sort, direction);
         }
 
-        return transactionRepositoryPort.findAll();
+        return transactionRepositoryPort.findAll(page, size, sort, direction);
     }
 }

@@ -1,22 +1,22 @@
 package br.com.github.williiansilva51.zaldo.core.ports.out;
 
+import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 public interface TransactionRepositoryPort {
     Transaction save(Transaction transaction);
 
-    List<Transaction> findAll();
+    Paginated<Transaction> findAll(int page, int size, String sort, String direction);
 
-    List<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date);
+    Paginated<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date, int page, int size, String sort, String direction);
 
-    List<Transaction> findByTransactionType(TransactionType type);
+    Paginated<Transaction> findByTransactionType(TransactionType type, int page, int size, String sort, String direction);
 
-    List<Transaction> findByDate(LocalDate date);
+    Paginated<Transaction> findByDate(LocalDate date, int page, int size, String sort, String direction);
 
     Optional<Transaction> findById(Long id);
 

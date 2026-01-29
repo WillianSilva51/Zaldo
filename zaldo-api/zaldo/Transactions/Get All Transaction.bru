@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/transactions?type&date
+  url: {{baseUrl}}/transactions?type&date&page&size&sort&direction
   body: none
   auth: inherit
 }
@@ -13,6 +13,10 @@ get {
 params:query {
   type: 
   date: 
+  page: 
+  size: 
+  sort: 
+  direction: 
 }
 
 assert {
