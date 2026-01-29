@@ -6,6 +6,7 @@ import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.*;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.CreateTransactionRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.UpdateTransactionRequest;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.PaginatedResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.TransactionResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper.TransactionMapper;
 import jakarta.validation.Valid;
@@ -40,18 +41,25 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionResponse>> getAllTransactions(@RequestParam(required = false) TransactionType type,
-                                                                        @RequestParam(required = false) LocalDate date,
-                                                                        @RequestParam(defaultValue = "0") int page,
-                                                                        @RequestParam(defaultValue = "10") int size,
-                                                                        @RequestParam(defaultValue = "date") String sort,
-                                                                        @RequestParam(defaultValue = "DESC") String direction) {
+    public ResponseEntity<PaginatedResponse<TransactionResponse>> getAllTransactions(@RequestParam(required = false) TransactionType type,
+                                                                                     @RequestParam(required = false) LocalDate date,
+                                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                                     @RequestParam(defaultValue = "10") int size,
+                                                                                     @RequestParam(defaultValue = "date") String sort,
+                                                                                     @RequestParam(defaultValue = "DESC") String direction) {
         Paginated<Transaction> paginated = listTransactionUseCase.execute(type, date, page, size, sort, direction);
 
-        List<TransactionResponse> responseList = paginated.content()
+        List<TransactionResponse> dtoList = paginated.content()
                 .stream()
                 .map(transactionMapper::toResponse)
                 .toList();
+
+        PaginatedResponse<TransactionResponse> responseList = new PaginatedResponse<>(
+                dtoList,
+                paginated.totalElements(),
+                paginated.totalPages(),
+                paginated.currentPage()
+        );
 
         return ResponseEntity.ok(responseList);
     }
