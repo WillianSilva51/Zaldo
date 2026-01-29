@@ -17,4 +17,11 @@ public class WalletEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wallet_id")
     private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 }
