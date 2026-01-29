@@ -14,9 +14,9 @@ public class ListUsersService implements ListUsersUseCase {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
-    public List<User> execute(String email) {
-        if (email != null) {
-            return userRepositoryPort.findByEmailContaining(email);
+    public List<User> execute(String emailFragment) {
+        if (emailFragment != null) {
+            return userRepositoryPort.findByEmailContaining(emailFragment);
         }
 
         return userRepositoryPort.findAll();
