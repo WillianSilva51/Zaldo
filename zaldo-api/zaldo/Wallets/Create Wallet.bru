@@ -1,0 +1,32 @@
+meta {
+  name: Create Wallet
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/wallets
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Nubank",
+    "description": "Conta Principal",
+    "userId": "9a2bb518-15a0-4ad9-ae2c-7f57c1a3690a"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.id: isNumber
+  res.body.name: isString
+  res.body.userId: isString
+  res.body.userName: isString
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
