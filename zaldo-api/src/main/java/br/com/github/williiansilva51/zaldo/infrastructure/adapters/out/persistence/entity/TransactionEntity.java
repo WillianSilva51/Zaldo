@@ -26,7 +26,6 @@ public class TransactionEntity {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)

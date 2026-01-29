@@ -21,7 +21,6 @@ public class WalletEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

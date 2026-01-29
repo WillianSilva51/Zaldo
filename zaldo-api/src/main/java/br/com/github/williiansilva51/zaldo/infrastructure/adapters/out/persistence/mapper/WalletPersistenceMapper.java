@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class WalletPersistenceMapper implements PersistenceMapper<WalletEntity, Wallet> {
+public class WalletPersistenceMapper implements PersistenceMapper<WalletEntity, Wallet> {
     private final UserPersistenceMapper userMapper;
 
     @Override
@@ -19,6 +19,7 @@ class WalletPersistenceMapper implements PersistenceMapper<WalletEntity, Wallet>
         return WalletEntity.builder()
                 .id(domain.getId())
                 .name(domain.getName())
+                .description(domain.getDescription())
                 .user(userMapper.toEntity(domain.getUser()))
                 .build();
     }
