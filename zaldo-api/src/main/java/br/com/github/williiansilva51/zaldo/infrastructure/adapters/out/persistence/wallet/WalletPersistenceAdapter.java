@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persiste
 
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.WalletEntity;
@@ -27,9 +28,11 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
                 springPage.getNumber());
     }
 
-    private Pageable createPageRequest(int page, int size, String sort, String direction) {
-        Sort.Direction sortDirection = Sort.Direction.fromString(direction);
-        return PageRequest.of(page, size, Sort.by(sortDirection, sort));
+    private Pageable createPageRequest(int page, int size, String sort, DirectionOrder direction) {
+        return PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.valueOf(direction.name()), sort));
     }
 
     @Override
@@ -47,7 +50,7 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     }
 
     @Override
-    public Paginated<Wallet> findByUserId(String userId, int page, int size, String sort, String direction) {
+    public Paginated<Wallet> findByUserId(String userId, int page, int size, String sort, DirectionOrder direction) {
         Pageable pageable = createPageRequest(page, size, sort, direction);
 
         return toDomainPage(walletRepository.findByUserId(userId, pageable)

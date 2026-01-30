@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByUserIdUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.CreateWalletRequest;
@@ -41,7 +42,7 @@ public class WalletController {
                                                                                  @RequestParam(defaultValue = "0") @Min(value = 0, message = "Valor mínimo da página é 0") int page,
                                                                                  @RequestParam(defaultValue = "10") @Max(value = 100, message = "O valor máximo do tamanho é 100") @Min(value = 1, message = "Valor mínimo do tamanho é 1") int size,
                                                                                  @RequestParam(defaultValue = "createdAt") String sort,
-                                                                                 @RequestParam(defaultValue = "DESC") String direction) {
+                                                                                 @RequestParam(defaultValue = "DESC") DirectionOrder direction) {
         Paginated<Wallet> paginated = findWalletByUserIdUseCase.execute(userId, page, size, sort, direction);
 
         List<WalletResponse> wallets = paginated.content()
