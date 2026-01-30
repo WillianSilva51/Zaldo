@@ -13,11 +13,11 @@ public class Wallet {
     private String description;
     private User user;
 
-    void update(Wallet newInfo) {
+    public void update(Wallet newInfo) {
         if (newInfo.getName() != null && !newInfo.getName().isBlank()) {
             name = newInfo.getName();
         }
-        if (newInfo.getDescription() != null && !newInfo.getDescription().isBlank()) {
+        if (newInfo.getDescription() != null) {
             description = newInfo.getDescription();
         }
     }
