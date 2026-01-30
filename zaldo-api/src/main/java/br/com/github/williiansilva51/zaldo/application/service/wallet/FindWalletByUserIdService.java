@@ -15,6 +15,7 @@ class FindWalletByUserIdService implements FindWalletByUserIdUseCase {
 
     @Override
     public Paginated<Wallet> execute(String userId, int page, int size, String sort, DirectionOrder direction) {
+        // Futuramente podemos validar se o usuário existe antes de buscar
         return walletRepositoryPort.findByUserId(userId, page, size, sort, direction);
     }
 }
