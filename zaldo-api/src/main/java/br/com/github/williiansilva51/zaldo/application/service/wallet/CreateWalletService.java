@@ -6,8 +6,11 @@ import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundExcep
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +19,7 @@ public class CreateWalletService implements CreateWalletUseCase {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
+    @Transactional
     public Wallet execute(Wallet wallet) {
         String userId = wallet.getUser().getId();
 
@@ -23,6 +27,7 @@ public class CreateWalletService implements CreateWalletUseCase {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + userId));
 
         wallet.setUser(user);
+        wallet.setCreatedAt(LocalDateTime.now());
 
         return walletRepositoryPort.save(wallet);
     }

@@ -2,6 +2,8 @@ package br.com.github.williiansilva51.zaldo.core.domain;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,6 +13,7 @@ public class Wallet {
     private Long id;
     private String name;
     private String description;
+    private LocalDateTime createdAt;
     private User user;
 
     public void update(Wallet newInfo) {
