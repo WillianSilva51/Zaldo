@@ -4,8 +4,11 @@ import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.DeleteWalletByIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByUserIdUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.UpdateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.CreateWalletRequest;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.UpdateWalletRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.PaginatedResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.WalletResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper.WalletMapper;
@@ -27,6 +30,8 @@ import java.util.List;
 public class WalletController {
     private final CreateWalletUseCase createWalletUseCase;
     private final FindWalletByUserIdUseCase findWalletByUserIdUseCase;
+    private final DeleteWalletByIdUseCase deleteWalletByIdUseCase;
+    private final UpdateWalletUseCase updateWalletUseCase;
     private final WalletMapper walletMapper;
 
     @PostMapping
@@ -57,5 +62,20 @@ public class WalletController {
                 paginated.currentPage());
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<WalletResponse> updateWallet(@PathVariable Long id, @RequestParam String userId, @RequestBody @Valid UpdateWalletRequest request) {
+        Wallet domainObject = walletMapper.toDomainByUpdate(request);
+
+        Wallet updated = updateWalletUseCase.execute(id, userId, domainObject);
+
+        return ResponseEntity.ok(walletMapper.toResponse(updated));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteWallet(@PathVariable Long id, @RequestParam String userId) {
+        deleteWalletByIdUseCase.execute(id, userId);
+        return ResponseEntity.noContent().build();
     }
 }

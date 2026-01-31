@@ -1,0 +1,28 @@
+meta {
+  name: Delete Wallet
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/wallets/{{wallet_id}}?userId=9a2bb518-15a0-4ad9-ae2c-7f57c1a3690a
+  body: none
+  auth: inherit
+}
+
+params:query {
+  userId: 9a2bb518-15a0-4ad9-ae2c-7f57c1a3690a
+}
+
+vars:pre-request {
+  wallet_id: 2
+}
+
+assert {
+  res.status: eq 204
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
