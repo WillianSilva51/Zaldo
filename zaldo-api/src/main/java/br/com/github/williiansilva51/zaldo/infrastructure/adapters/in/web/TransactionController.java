@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
+import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.*;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.CreateTransactionRequest;
@@ -14,6 +15,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
+@Validated
 @RequiredArgsConstructor
 public class TransactionController {
     private final CreateTransactionUseCase createTransactionUseCase;
@@ -48,7 +51,7 @@ public class TransactionController {
                                                                                      @RequestParam(defaultValue = "0") @Min(value = 0, message = "Valor mínimo da página é 0") int page,
                                                                                      @RequestParam(defaultValue = "10") @Max(value = 100, message = "O valor máximo do tamanho é 100") @Min(value = 1, message = "Valor mínimo do tamanho é 1") int size,
                                                                                      @RequestParam(defaultValue = "date") String sort,
-                                                                                     @RequestParam(defaultValue = "DESC") String direction) {
+                                                                                     @RequestParam(defaultValue = "DESC") DirectionOrder direction) {
         Paginated<Transaction> paginated = listTransactionUseCase.execute(type, date, page, size, sort, direction);
 
         List<TransactionResponse> dtoList = paginated.content()

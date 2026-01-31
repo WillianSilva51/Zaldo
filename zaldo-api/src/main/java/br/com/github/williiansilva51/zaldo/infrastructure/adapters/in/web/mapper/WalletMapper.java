@@ -33,6 +33,7 @@ public class WalletMapper implements Mapper<Wallet, CreateWalletRequest, WalletR
                 domain.getId(),
                 domain.getName(),
                 domain.getDescription(),
+                domain.getCreatedAt(),
                 domain.getUser().getId(),
                 domain.getUser().getName()
         );

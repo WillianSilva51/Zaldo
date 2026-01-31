@@ -1,0 +1,20 @@
+package br.com.github.williiansilva51.zaldo.application.service.wallet;
+
+import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
+import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByIdUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class FindWalletByIdService implements FindWalletByIdUseCase {
+    private final WalletRepositoryPort walletRepositoryPort;
+
+    @Override
+    public Wallet execute(Long id) {
+        return walletRepositoryPort.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Carteira não encontrada com ID: " + id));
+    }
+}

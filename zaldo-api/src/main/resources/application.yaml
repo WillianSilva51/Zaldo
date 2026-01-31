@@ -29,7 +29,7 @@ spring:
   docker:
     compose:
       enabled: false
-      file: ../docker-compose.yml
+      file: ../compose.yml
       lifecycle-management: start-only # Inicia o banco ao rodar a app, mas não derruba ao parar
 
 # Configurações Customizadas da Aplicação

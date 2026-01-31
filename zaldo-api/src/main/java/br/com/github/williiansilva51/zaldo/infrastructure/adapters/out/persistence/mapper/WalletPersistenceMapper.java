@@ -20,6 +20,7 @@ public class WalletPersistenceMapper implements PersistenceMapper<WalletEntity, 
                 .id(domain.getId())
                 .name(domain.getName())
                 .description(domain.getDescription())
+                .createdAt(domain.getCreatedAt())
                 .user(userMapper.toEntity(domain.getUser()))
                 .build();
     }
@@ -34,6 +35,7 @@ public class WalletPersistenceMapper implements PersistenceMapper<WalletEntity, 
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
+                .createdAt(entity.getCreatedAt())
                 .user(userMapper.toDomain(entity.getUser()))
                 .build();
     }

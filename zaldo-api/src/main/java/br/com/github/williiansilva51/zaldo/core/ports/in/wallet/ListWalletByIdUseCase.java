@@ -4,6 +4,6 @@ import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 
 import java.util.List;
 
-public interface ListWalletsUseCase {
+public interface ListWalletByIdUseCase {
     List<Wallet> execute();
 }

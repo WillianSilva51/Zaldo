@@ -1,0 +1,31 @@
+meta {
+  name: Update Wallet
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/wallets/{{wallet_id}}?userId
+  body: json
+  auth: inherit
+}
+
+params:query {
+  userId: 
+}
+
+body:json {
+  {
+    "name": "",
+    "description": ""
+  }
+}
+
+vars:pre-request {
+  wallet_id: 
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
