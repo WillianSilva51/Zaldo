@@ -1,11 +1,11 @@
 meta {
   name: Find Wallets By User Id
   type: http
-  seq: 2
+  seq: 1
 }
 
 get {
-  url: {{baseUrl}}/wallets/{{user_Id}}?page&size&sort&direction
+  url: {{baseUrl}}/users/{{userId}}/wallets?page&size&sort&direction
   body: none
   auth: inherit
 }
@@ -18,7 +18,7 @@ params:query {
 }
 
 vars:pre-request {
-  user_Id: 9a2bb518-15a0-4ad9-ae2c-7f57c1a3690a
+  userId: 9a2bb518-15a0-4ad9-ae2c-7f57c1a3690a
 }
 
 assert {

@@ -20,7 +20,7 @@ public class UpdateWalletService implements UpdateWalletUseCase {
         Wallet existingWallet = findWalletByIdService.execute(id);
 
         if (!existingWallet.getUser().getId().equals(authenticatedUserId)) {
-            throw new DomainValidationException("Você não tem permissão para deletar esta carteira.");
+            throw new DomainValidationException("Você não tem permissão para atualizar esta carteira.");
         }
 
         existingWallet.update(wallet);

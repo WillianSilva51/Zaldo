@@ -1,0 +1,24 @@
+meta {
+  name: Find Wallet By Id
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/wallets/{{wallet_id}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  wallet_id: 2
+}
+
+assert {
+  res.status: eq 200
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
