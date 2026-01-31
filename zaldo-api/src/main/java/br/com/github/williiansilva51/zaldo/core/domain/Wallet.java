@@ -21,7 +21,9 @@ public class Wallet {
             name = newInfo.getName();
         }
         if (newInfo.getDescription() != null) {
-            description = newInfo.getDescription();
+            description = newInfo.getDescription().isBlank()
+                    ? null
+                    : newInfo.getDescription();
         }
     }
 }

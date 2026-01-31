@@ -3,10 +3,11 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persiste
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
+import br.com.github.williiansilva51.zaldo.core.enums.sort.WalletSortField;
 import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.PageUtils;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.WalletEntity;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.mapper.WalletPersistenceMapper;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.utils.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     }
 
     @Override
-    public Paginated<Wallet> findByUserId(String userId, int page, int size, String sort, DirectionOrder direction) {
+    public Paginated<Wallet> findByUserId(String userId, int page, int size, WalletSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
 
         return pageUtils.toDomainPage(walletRepository.findByUserId(userId, pageable)
