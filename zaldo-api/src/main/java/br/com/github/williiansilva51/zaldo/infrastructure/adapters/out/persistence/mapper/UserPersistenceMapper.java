@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 public class UserPersistenceMapper implements PersistenceMapper<UserEntity, User> {
     @Override
     public UserEntity toEntity(User domain) {
+        if (domain == null) return null;
+
         return UserEntity.builder()
                 .id(domain.getId())
                 .name(domain.getName())
@@ -18,6 +20,8 @@ public class UserPersistenceMapper implements PersistenceMapper<UserEntity, User
 
     @Override
     public User toDomain(UserEntity entity) {
+        if (entity == null) return null;
+
         return User.builder()
                 .id(entity.getId())
                 .name(entity.getName())

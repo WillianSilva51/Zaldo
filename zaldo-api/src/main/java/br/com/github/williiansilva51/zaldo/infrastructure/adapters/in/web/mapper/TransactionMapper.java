@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
+import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.CreateTransactionRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.UpdateTransactionRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.TransactionResponse;
@@ -15,6 +16,7 @@ public class TransactionMapper implements Mapper<Transaction, CreateTransactionR
                 .amount(request.amount())
                 .type(request.type())
                 .date(request.date())
+                .wallet(Wallet.builder().id(request.walletId()).build())
                 .build();
     }
 

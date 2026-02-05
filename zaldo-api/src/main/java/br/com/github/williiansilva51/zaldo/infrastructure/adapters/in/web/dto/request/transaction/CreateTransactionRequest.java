@@ -19,6 +19,9 @@ public record CreateTransactionRequest(
         @NotNull(message = "O tipo é obrigatório (INCOME ou EXPENSE)")
         TransactionType type,
 
-        LocalDate date
+        LocalDate date,
+
+        @NotNull(message = "O ID da carteira é obrigatório")
+        Long walletId
 ) {
 }

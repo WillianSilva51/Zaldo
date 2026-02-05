@@ -12,9 +12,7 @@ public class WalletPersistenceMapper implements PersistenceMapper<WalletEntity, 
 
     @Override
     public WalletEntity toEntity(Wallet domain) {
-        if (domain == null) {
-            return null;
-        }
+        if (domain == null) return null;
 
         return WalletEntity.builder()
                 .id(domain.getId())
@@ -27,9 +25,7 @@ public class WalletPersistenceMapper implements PersistenceMapper<WalletEntity, 
 
     @Override
     public Wallet toDomain(WalletEntity entity) {
-        if (entity == null) {
-            return null;
-        }
+        if (entity == null) return null;
 
         return Wallet.builder()
                 .id(entity.getId())
