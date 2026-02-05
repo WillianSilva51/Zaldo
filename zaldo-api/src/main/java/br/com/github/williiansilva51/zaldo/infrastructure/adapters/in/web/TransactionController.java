@@ -4,6 +4,7 @@ import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
+import br.com.github.williiansilva51.zaldo.core.enums.sort.TransactionSortField;
 import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.*;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.CreateTransactionRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.transaction.UpdateTransactionRequest;
@@ -50,7 +51,7 @@ public class TransactionController {
                                                                                      @RequestParam(required = false) LocalDate date,
                                                                                      @RequestParam(defaultValue = "0") @Min(value = 0, message = "Valor mínimo da página é 0") int page,
                                                                                      @RequestParam(defaultValue = "10") @Max(value = 100, message = "O valor máximo do tamanho é 100") @Min(value = 1, message = "Valor mínimo do tamanho é 1") int size,
-                                                                                     @RequestParam(defaultValue = "date") String sort,
+                                                                                     @RequestParam(defaultValue = "date") TransactionSortField sort,
                                                                                      @RequestParam(defaultValue = "DESC") DirectionOrder direction) {
         Paginated<Transaction> paginated = listTransactionUseCase.execute(type, date, page, size, sort, direction);
 

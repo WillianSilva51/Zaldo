@@ -34,4 +34,8 @@ public class TransactionEntity {
 
     @Column(nullable = false)
     private LocalDate date;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id", nullable = false)
+    private WalletEntity wallet;
 }

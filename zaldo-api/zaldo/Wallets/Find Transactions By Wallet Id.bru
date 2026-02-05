@@ -1,0 +1,31 @@
+meta {
+  name: Find Transactions By Wallet Id
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/wallets/{{walletId}}/transactions?page&size&sort&direction
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 
+  size: 
+  sort: 
+  direction: 
+}
+
+vars:pre-request {
+  walletId: 1
+}
+
+assert {
+  res.status: eq 200
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

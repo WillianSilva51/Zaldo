@@ -4,10 +4,11 @@ import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
+import br.com.github.williiansilva51.zaldo.core.enums.sort.TransactionSortField;
 import br.com.github.williiansilva51.zaldo.core.ports.out.TransactionRepositoryPort;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.PageUtils;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.TransactionEntity;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.mapper.TransactionPersistenceMapper;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.utils.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -32,25 +33,31 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
     }
 
     @Override
-    public Paginated<Transaction> findAll(int page, int size, String sort, DirectionOrder direction) {
+    public Paginated<Transaction> findAll(int page, int size, TransactionSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
         return pageUtils.toDomainPage(springDataTransactionRepository.findAll(pageable).map(mapper::toDomain));
     }
 
     @Override
-    public Paginated<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date, int page, int size, String sort, DirectionOrder direction) {
+    public Paginated<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date, int page, int size, TransactionSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
         return pageUtils.toDomainPage(springDataTransactionRepository.findByTypeAndDate(type, date, pageable).map(mapper::toDomain));
     }
 
     @Override
-    public Paginated<Transaction> findByTransactionType(TransactionType type, int page, int size, String sort, DirectionOrder direction) {
+    public Paginated<Transaction> findByWalletId(Long walletId, int page, int size, TransactionSortField sort, DirectionOrder direction) {
+        Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
+        return pageUtils.toDomainPage(springDataTransactionRepository.findByWalletId(walletId, pageable).map(mapper::toDomain));
+    }
+
+    @Override
+    public Paginated<Transaction> findByTransactionType(TransactionType type, int page, int size, TransactionSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
         return pageUtils.toDomainPage(springDataTransactionRepository.findByType(type, pageable).map(mapper::toDomain));
     }
 
     @Override
-    public Paginated<Transaction> findByDate(LocalDate date, int page, int size, String sort, DirectionOrder direction) {
+    public Paginated<Transaction> findByDate(LocalDate date, int page, int size, TransactionSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
         return pageUtils.toDomainPage(springDataTransactionRepository.findByDate(date, pageable).map(mapper::toDomain));
     }

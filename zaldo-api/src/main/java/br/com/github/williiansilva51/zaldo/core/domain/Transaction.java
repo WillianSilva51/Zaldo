@@ -21,6 +21,7 @@ public class Transaction {
     private String description;
     private TransactionType type;
     private LocalDate date;
+    private Wallet wallet;
 
     public void validateState() {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -47,6 +48,12 @@ public class Transaction {
         }
 
         validateState();
+    }
+
+    public void setWallet(Wallet newWallet) {
+        if (newWallet != null) {
+            wallet = newWallet;
+        }
     }
 
     public boolean isPositive() {
