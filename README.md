@@ -19,6 +19,9 @@ O projeto foi desenhado para ser agnóstico a infraestrutura e altamente testáv
 * **Containerização:** Podman (Rootless) & Docker Compose
 * **API Client:** [Bruno](https://www.usebruno.com/) (Coleção inclusa no repo)
 
+## Esquema Relacional do Banco de Dados
+![Esquema Relacional do Banco de Dados](./docs/images/db_schema.png)
+
 ### 🏗️ Estrutura do Projeto (Hexagonal)
 
 O código segue rigorosamente a separação de responsabilidades para blindar o domínio:

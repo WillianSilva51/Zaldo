@@ -14,4 +14,6 @@ public interface SpringDataTransactionRepository extends JpaRepository<Transacti
     Page<TransactionEntity> findByDate(LocalDate date, Pageable pageable);
 
     Page<TransactionEntity> findByTypeAndDate(TransactionType type, LocalDate date, Pageable pageable);
+
+    Page<TransactionEntity> findByWalletId(Long walletId, Pageable pageable);
 }

@@ -45,6 +45,12 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
     }
 
     @Override
+    public Paginated<Transaction> findByWalletId(Long walletId, int page, int size, TransactionSortField sort, DirectionOrder direction) {
+        Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
+        return pageUtils.toDomainPage(springDataTransactionRepository.findByWalletId(walletId, pageable).map(mapper::toDomain));
+    }
+
+    @Override
     public Paginated<Transaction> findByTransactionType(TransactionType type, int page, int size, TransactionSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
         return pageUtils.toDomainPage(springDataTransactionRepository.findByType(type, pageable).map(mapper::toDomain));

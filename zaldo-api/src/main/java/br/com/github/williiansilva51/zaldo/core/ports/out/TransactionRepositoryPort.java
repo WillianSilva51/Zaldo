@@ -16,6 +16,8 @@ public interface TransactionRepositoryPort {
 
     Paginated<Transaction> findByTransactionTypeAndDate(TransactionType type, LocalDate date, int page, int size, TransactionSortField sort, DirectionOrder direction);
 
+    Paginated<Transaction> findByWalletId(Long walletId, int page, int size, TransactionSortField sort, DirectionOrder direction);
+
     Paginated<Transaction> findByTransactionType(TransactionType type, int page, int size, TransactionSortField sort, DirectionOrder direction);
 
     Paginated<Transaction> findByDate(LocalDate date, int page, int size, TransactionSortField sort, DirectionOrder direction);
