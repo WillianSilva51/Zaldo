@@ -2,16 +2,14 @@ package br.com.github.williiansilva51.zaldo.core.domain;
 
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.core.exceptions.DomainValidationException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -48,12 +46,6 @@ public class Transaction {
         }
 
         validateState();
-    }
-
-    public void setWallet(Wallet newWallet) {
-        if (newWallet != null) {
-            wallet = newWallet;
-        }
     }
 
     public boolean isPositive() {

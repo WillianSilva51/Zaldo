@@ -26,7 +26,7 @@ public class WalletTransactionController {
     private final TransactionMapper transactionMapper;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponse<TransactionResponse>> findTransactionsByWalletID(@PathVariable Long walletId,
+    public ResponseEntity<PaginatedResponse<TransactionResponse>> findTransactionsByWalletId(@PathVariable Long walletId,
                                                                                              @RequestParam(defaultValue = "0") @Min(value = 0, message = "Valor mínimo da página é 0") int page,
                                                                                              @RequestParam(defaultValue = "10") @Max(value = 100, message = "O valor máximo do tamanho é 100") @Min(value = 1, message = "Valor mínimo do tamanho é 1") int size,
                                                                                              @RequestParam(defaultValue = "date") TransactionSortField sort,
