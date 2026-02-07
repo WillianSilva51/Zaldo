@@ -5,6 +5,7 @@ import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundExcep
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegramIdUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.command.TelegramCommandHandler;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.LoginFlowHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
@@ -23,6 +24,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,11 +35,13 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
     private final FindUserByTelegramIdUseCase findUserByTelegramIdUseCase;
     private final Map<String, TelegramCommandHandler> commandHandlers;
     private final Map<String, TelegramCallbackHandler> callbackHandlers;
+    private final LoginFlowHandler loginFlowHandler;
 
     public ZaldoTelegramBot(@Value("${api.security.token.bot}") String token,
                             FindUserByTelegramIdUseCase findUserByTelegramId,
                             List<TelegramCommandHandler> commandList,
-                            List<TelegramCallbackHandler> callbackList) {
+                            List<TelegramCallbackHandler> callbackList,
+                            LoginFlowHandler loginHandler) {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(getBotToken());
         findUserByTelegramIdUseCase = findUserByTelegramId;
@@ -45,6 +49,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
                 .collect(Collectors.toMap(TelegramCommandHandler::getCommandName, Function.identity()));
         callbackHandlers = callbackList.stream()
                 .collect(Collectors.toMap(TelegramCallbackHandler::getActionName, Function.identity()));
+        loginFlowHandler = loginHandler;
     }
 
     @Override
@@ -71,14 +76,6 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         }
     }
 
-    private void executeClient(SendMessage sendMessage) {
-        try {
-            telegramClient.execute(sendMessage);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void executeClient(BotApiMethod<?> method) {
         try {
             telegramClient.execute(method);
@@ -92,6 +89,19 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         String telegramId = message.getFrom().getId().toString();
         Long chatId = message.getChatId();
         String userName = message.getFrom().getUserName();
+
+        Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
+        User user = userOptional
+                .orElse(null);
+
+        if (user != null) {
+            SendMessage flowResponse = loginFlowHandler.handleInput(chatId, text, user);
+
+            if (flowResponse != null) {
+                executeClient(flowResponse);
+                return;
+            }
+        }
 
         String command = text.split(" ")[0];
 

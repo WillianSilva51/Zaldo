@@ -10,5 +10,13 @@ services:
       POSTGRES_PASSWORD: admin
     volumes:
       - postgres_data:/var/lib/postgresql/data:Z
+  redis:
+    image: docker.io/redis:8.2-alpine
+    container_name: zaldo-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data:Z
 volumes:
   postgres_data:
+  redis_data:

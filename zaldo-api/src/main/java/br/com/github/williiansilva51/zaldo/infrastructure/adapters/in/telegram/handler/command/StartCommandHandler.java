@@ -47,7 +47,7 @@ public class StartCommandHandler implements TelegramCommandHandler {
                     .keyboardRow(new InlineKeyboardRow(
                                     InlineKeyboardButton.builder()
                                             .text("Configurar Acesso \uD83D\uDD11")
-                                            .callbackData("login")
+                                            .callbackData("BTN_LOGIN")
                                             .build()
                             )
                     ).build();
