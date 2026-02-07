@@ -12,6 +12,8 @@ public interface UserRepositoryPort {
 
     Optional<User> findById(String id);
 
+    Optional<User> findByTelegramId(String telegramId);
+
     Optional<User> findByEmail(String email);
 
     List<User> findByEmailContaining(String emailFragment);

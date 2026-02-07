@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User {
     private String id;
+    private String telegramId;
     private String name;
     private String email;
     private String password;

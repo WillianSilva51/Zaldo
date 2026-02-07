@@ -40,6 +40,12 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<User> findByTelegramId(String telegramId) {
+        return springDataUserRepository.findByTelegramId(telegramId)
+                .map(mapper::toDomain);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return springDataUserRepository.findByEmail(email)
                 .map(mapper::toDomain);

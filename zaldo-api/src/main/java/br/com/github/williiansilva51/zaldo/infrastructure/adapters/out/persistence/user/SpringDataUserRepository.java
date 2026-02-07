@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface SpringDataUserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByEmail(String email);
 
+    Optional<UserEntity> findByTelegramId(String telegramId);
+
     List<UserEntity> findByEmailContaining(String emailFragment);
 }

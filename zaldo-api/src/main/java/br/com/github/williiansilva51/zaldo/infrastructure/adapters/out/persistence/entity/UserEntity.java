@@ -18,6 +18,9 @@ public class UserEntity {
     @Column(name = "user_id")
     private String id;
 
+    @Column(name = "telegram_id", unique = true)
+    private String telegramId;
+
     @Column(nullable = false)
     private String name;
 
