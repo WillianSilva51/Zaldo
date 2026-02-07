@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 @Component
-class HelpCommandHandler implements TelegramCommandHandler {
+public class HelpCommandHandler implements TelegramCommandHandler {
 
     @Override
     public String getCommandName() {

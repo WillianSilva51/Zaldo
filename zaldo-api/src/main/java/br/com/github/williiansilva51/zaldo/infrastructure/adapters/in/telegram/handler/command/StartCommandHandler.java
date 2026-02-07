@@ -6,6 +6,9 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegram
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -33,14 +36,36 @@ public class StartCommandHandler implements TelegramCommandHandler {
                     .password(UUID.randomUUID().toString())
                     .build();
             createUserUseCase.execute(newUser);
-            messageAnswer = "\uD83D\uDC4B Olá, " + username + "! Sua conta foi criada com sucesso no Zaldo.";
+            messageAnswer = String.format(
+                    "👋 Olá, <b>%s</b>! Seja bem-vindo ao <b>Zaldo</b>. Sua conta já está ativa! 🚀\n\n" +
+                            "Quer levar sua gestão para o próximo nível? Configure um e-mail e senha para acessar nossa <b>versão Web</b>.\n\n" +
+                            "Basta clicar aqui:",
+                    username
+            );
+
+            InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder()
+                    .keyboardRow(new InlineKeyboardRow(
+                                    InlineKeyboardButton.builder()
+                                            .text("Configurar Acesso \uD83D\uDD11")
+                                            .callbackData("login")
+                                            .build()
+                            )
+                    ).build();
+
+            return SendMessage.builder()
+                    .text(messageAnswer)
+                    .chatId(chatId)
+                    .replyMarkup(markup)
+                    .parseMode("HTML")
+                    .build();
         } else {
-            messageAnswer = "Olá novamente, " + username + "! Você já tem cadastro.";
+            messageAnswer = "Olá novamente, <b>" + username + "</b>! Você já tem cadastro.";
         }
 
         return SendMessage.builder()
                 .text(messageAnswer)
                 .chatId(chatId)
+                .parseMode("HTML")
                 .build();
     }
 }

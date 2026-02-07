@@ -71,29 +71,6 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         }
     }
 
-    private void handleMessage(Message message) {
-        String text = message.getText();
-        String telegramId = message.getFrom().getId().toString();
-        Long chatId = message.getChatId();
-        String userName = message.getFrom().getUserName();
-
-        String command = text.split(" ")[0];
-
-        TelegramCommandHandler handler = commandHandlers.get(command);
-
-        if (handler != null) {
-
-            SendMessage sendMessage = handler.execute(telegramId, chatId, text, userName);
-
-            executeClient(sendMessage);
-        } else {
-            SendMessage sendMessage = commandHandlers.get("/help")
-                    .execute(telegramId, chatId, text, userName);
-
-            executeClient(sendMessage);
-        }
-    }
-
     private void executeClient(SendMessage sendMessage) {
         try {
             telegramClient.execute(sendMessage);
@@ -110,6 +87,28 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         }
     }
 
+    private void handleMessage(Message message) {
+        String text = message.getText();
+        String telegramId = message.getFrom().getId().toString();
+        Long chatId = message.getChatId();
+        String userName = message.getFrom().getUserName();
+
+        String command = text.split(" ")[0];
+
+        TelegramCommandHandler handler = commandHandlers.get(command);
+
+        SendMessage sendMessage;
+
+        if (handler != null) {
+            sendMessage = handler.execute(telegramId, chatId, text, userName);
+        } else {
+            sendMessage = commandHandlers.get("/help")
+                    .execute(telegramId, chatId, text, userName);
+        }
+
+        executeClient(sendMessage);
+    }
+
     private void handleCallback(CallbackQuery callbackQuery) {
         String action = callbackQuery.getData();
 
@@ -122,6 +121,14 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
             BotApiMethod<?> response = handler.execute(callbackQuery, user);
 
             executeClient(response);
+        } else {
+            SendMessage sendMessage = commandHandlers.get("/help")
+                    .execute(callbackQuery.getFrom().getId().toString(),
+                            callbackQuery.getMessage().getChatId(),
+                            callbackQuery.getData(),
+                            callbackQuery.getFrom().getUserName());
+
+            executeClient(sendMessage);
         }
     }
 
