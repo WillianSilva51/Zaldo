@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 @Component
 public class HelpCommandHandler implements TelegramCommandHandler {
@@ -12,7 +13,9 @@ public class HelpCommandHandler implements TelegramCommandHandler {
     }
 
     @Override
-    public SendMessage execute(String telegramId, Long chatId, String text, String username) {
+    public SendMessage execute(Message message, String username) {
+        Long chatId = message.getChatId();
+        
         return SendMessage.builder()
                 .chatId(chatId)
                 .text("Help")

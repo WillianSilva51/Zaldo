@@ -6,6 +6,7 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegram
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
@@ -25,7 +26,10 @@ public class StartCommandHandler implements TelegramCommandHandler {
     }
 
     @Override
-    public SendMessage execute(String telegramId, Long chatId, String text, String username) {
+    public SendMessage execute(Message message, String username) {
+        String telegramId = message.getFrom().getId().toString();
+        Long chatId = message.getChatId();
+
         Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
         String messageAnswer;
 
@@ -37,9 +41,12 @@ public class StartCommandHandler implements TelegramCommandHandler {
                     .build();
             createUserUseCase.execute(newUser);
             messageAnswer = String.format(
-                    "👋 Olá, <b>%s</b>! Seja bem-vindo ao <b>Zaldo</b>. Sua conta já está ativa! 🚀\n\n" +
-                            "Quer levar sua gestão para o próximo nível? Configure um e-mail e senha para acessar nossa <b>versão Web</b>.\n\n" +
-                            "Basta clicar aqui:",
+                    """
+                            👋 Olá, <b>%s</b>! Seja bem-vindo ao <b>Zaldo</b>. Sua conta já está ativa! 🚀
+                            
+                            Quer levar sua gestão para o próximo nível? Configure um e-mail e senha para acessar nossa <b>versão Web</b>.
+                            
+                            Basta clicar aqui:""",
                     username
             );
 

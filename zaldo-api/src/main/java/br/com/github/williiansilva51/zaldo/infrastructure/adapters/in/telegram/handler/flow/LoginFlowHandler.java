@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.UpdateUserUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
@@ -18,17 +19,23 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class LoginFlowHandler implements FlowHandler {
     private final UserSessionManager sessionManager;
+    private final FindUserByIdUseCase findUserByIdUseCase;
     private final UpdateUserUseCase updateUserUseCase;
     private final Validator validator;
 
     @Override
-    public SendMessage handleInput(Long chatId, String text, User user) {
+    public boolean canHandle(ChatState chatState) {
+        return chatState.name().startsWith("WAITING_LOGIN");
+    }
+
+    @Override
+    public SendMessage handleInput(Long chatId, String text, String userId) {
         FlowContext context = sessionManager.get(chatId);
 
         if (context.getChatState().equals(ChatState.WAITING_LOGIN_EMAIL)) {
             return processEmailInput(chatId, text, context);
         } else if (context.getChatState().equals(ChatState.WAITING_LOGIN_PASSWORD)) {
-            return processPasswordInput(chatId, text, context, user);
+            return processPasswordInput(chatId, text, context, userId);
         }
 
         return null;
@@ -58,7 +65,9 @@ public class LoginFlowHandler implements FlowHandler {
                 .build();
     }
 
-    private SendMessage processPasswordInput(Long chatId, String text, FlowContext context, User user) {
+    private SendMessage processPasswordInput(Long chatId, String text, FlowContext context, String userId) {
+        User user = findUserByIdUseCase.execute(userId);
+
         String email = context.getTempEmail();
 
         // Ideal: Encriptar aqui (BCrypt)

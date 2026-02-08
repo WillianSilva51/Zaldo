@@ -5,7 +5,11 @@ import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundExcep
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegramIdUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.command.TelegramCommandHandler;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.FlowRouter;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.LoginFlowHandler;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
@@ -35,13 +39,15 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
     private final FindUserByTelegramIdUseCase findUserByTelegramIdUseCase;
     private final Map<String, TelegramCommandHandler> commandHandlers;
     private final Map<String, TelegramCallbackHandler> callbackHandlers;
-    private final LoginFlowHandler loginFlowHandler;
+    private final FlowRouter flowRouter;
+    private final UserSessionManager sessionManager;
 
     public ZaldoTelegramBot(@Value("${api.security.token.bot}") String token,
                             FindUserByTelegramIdUseCase findUserByTelegramId,
                             List<TelegramCommandHandler> commandList,
                             List<TelegramCallbackHandler> callbackList,
-                            LoginFlowHandler loginHandler) {
+                            LoginFlowHandler loginHandler, FlowRouter router,
+                            UserSessionManager manager) {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(getBotToken());
         findUserByTelegramIdUseCase = findUserByTelegramId;
@@ -49,7 +55,8 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
                 .collect(Collectors.toMap(TelegramCommandHandler::getCommandName, Function.identity()));
         callbackHandlers = callbackList.stream()
                 .collect(Collectors.toMap(TelegramCallbackHandler::getActionName, Function.identity()));
-        loginFlowHandler = loginHandler;
+        flowRouter = router;
+        sessionManager = manager;
     }
 
     @Override
@@ -90,12 +97,22 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         Long chatId = message.getChatId();
         String userName = message.getFrom().getUserName();
 
-        Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
-        User user = userOptional
-                .orElse(null);
+        FlowContext context = sessionManager.get(chatId);
+        String userId = context.getAuthenticatedUserId();
 
-        if (user != null) {
-            SendMessage flowResponse = loginFlowHandler.handleInput(chatId, text, user);
+        if (userId == null) {
+            Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
+
+            if (userOptional.isPresent()) {
+                userId = userOptional.get().getId();
+                context.setAuthenticatedUserId(userId);
+
+                sessionManager.save(chatId, context);
+            }
+        }
+
+        if (userId != null && context.getChatState() != ChatState.IDLE) {
+            SendMessage flowResponse = flowRouter.route(context.getChatState(), chatId, text, userId);
 
             if (flowResponse != null) {
                 executeClient(flowResponse);
@@ -110,10 +127,10 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         SendMessage sendMessage;
 
         if (handler != null) {
-            sendMessage = handler.execute(telegramId, chatId, text, userName);
+            sendMessage = handler.execute(message, userName);
         } else {
             sendMessage = commandHandlers.get("/help")
-                    .execute(telegramId, chatId, text, userName);
+                    .execute(message, userName);
         }
 
         executeClient(sendMessage);
@@ -133,9 +150,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
             executeClient(response);
         } else {
             SendMessage sendMessage = commandHandlers.get("/help")
-                    .execute(callbackQuery.getFrom().getId().toString(),
-                            callbackQuery.getMessage().getChatId(),
-                            callbackQuery.getData(),
+                    .execute(Message.builder().chat(callbackQuery.getMessage().getChat()).build(),
                             callbackQuery.getFrom().getUserName());
 
             executeClient(sendMessage);

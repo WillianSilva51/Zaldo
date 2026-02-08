@@ -16,6 +16,8 @@ public class FlowContext implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private ChatState chatState = ChatState.IDLE;
+
+    private String authenticatedUserId;
     private String tempEmail;
 
     // Dados Temporários (Carteira e Transação)

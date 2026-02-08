@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data:Z
   redis:
-    image: docker.io/redis:8.2-alpine
+    image: docker.io/redis:8.4-alpine
     container_name: zaldo-redis
     ports:
       - "6379:6379"
