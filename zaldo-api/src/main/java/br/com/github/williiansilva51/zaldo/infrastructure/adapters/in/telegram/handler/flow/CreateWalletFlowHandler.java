@@ -79,7 +79,7 @@ public class CreateWalletFlowHandler implements FlowHandler {
 
         Wallet wallet = Wallet.builder()
                 .name(context.getTempWalletName())
-                .description(context.getTempWalletDescription())
+                .description(text)
                 .user(user)
                 .build();
 

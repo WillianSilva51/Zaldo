@@ -16,8 +16,8 @@ public class UserSessionManager {
         redisTemplate = redis;
     }
 
-    private @NonNull String getKey(Long userId) {
-        return "session:" + userId;
+    private @NonNull String getKey(Long chatId) {
+        return "session:" + chatId;
     }
 
     public void save(Long userId, FlowContext flowContext) {

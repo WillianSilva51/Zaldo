@@ -18,8 +18,13 @@ public class RedisConfiguration {
 
         redisTemplate.setKeySerializer(new StringRedisSerializer());
 
-        redisTemplate.setValueSerializer(new JacksonJsonRedisSerializer<>(FlowContext.class));
+        JacksonJsonRedisSerializer<FlowContext> jsonSerializer = new JacksonJsonRedisSerializer<>(FlowContext.class);
+        redisTemplate.setValueSerializer(jsonSerializer);
 
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(jsonSerializer);
+
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 }

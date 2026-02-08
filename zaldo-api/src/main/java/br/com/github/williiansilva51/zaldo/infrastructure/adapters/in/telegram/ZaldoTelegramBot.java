@@ -6,7 +6,6 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegram
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.command.TelegramCommandHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.FlowRouter;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.LoginFlowHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
@@ -15,9 +14,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
-import org.telegram.telegrambots.longpolling.BotSession;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
-import org.telegram.telegrambots.longpolling.starter.AfterBotRegistration;
 import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
@@ -49,7 +46,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
                             FindUserByTelegramIdUseCase findUserByTelegramId,
                             List<TelegramCommandHandler> commandList,
                             List<TelegramCallbackHandler> callbackList,
-                            LoginFlowHandler loginHandler, FlowRouter router,
+                            FlowRouter router,
                             UserSessionManager manager) {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(getBotToken());
@@ -165,10 +162,5 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
             }
         }
         return userId;
-    }
-
-    @AfterBotRegistration
-    public void afterRegistration(BotSession botSession) {
-        log.info("Bot registrado com sucesso. Estado de execução: {}", botSession.isRunning());
     }
 }
