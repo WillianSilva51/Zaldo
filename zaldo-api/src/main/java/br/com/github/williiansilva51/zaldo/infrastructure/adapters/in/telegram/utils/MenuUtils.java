@@ -1,37 +1,70 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils;
 
+import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
+import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MenuUtils {
     public static InlineKeyboardMarkup createMainKeyboard() {
-        // Linha 1: Ações Rápidas
-        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_EXPENSE");
-        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_INCOME");
+        InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", "BTN_LIST_WALLETS");
+        InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", "BTN_LOGIN");
 
-        InlineKeyboardRow row1 = new InlineKeyboardRow(btnExpense, btnIncome);
-
-        // Linha 2: Consultas
-        InlineKeyboardButton btnWallets = createButton("💰 Carteiras", "BTN_WALLETS");
-        InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
-        InlineKeyboardRow row2 = new InlineKeyboardRow(btnWallets, btnStatement);
-
-        // Linha 3: Configurações / Sistema
-        InlineKeyboardButton btnWeb = createButton("🔑 Acesso Web / Login", "BTN_LOGIN");
-        InlineKeyboardRow row3 = new InlineKeyboardRow(btnWeb);
+        InlineKeyboardRow row1 = new InlineKeyboardRow(btnWallets);
+        InlineKeyboardRow row2 = new InlineKeyboardRow(btnWeb);
 
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(row1)
                 .keyboardRow(row2)
-                .keyboardRow(row3)
                 .build();
     }
 
-    private static InlineKeyboardButton createButton(String text, String callbackData) {
+    public static InlineKeyboardMarkup createWalletsKeyboard() {
+        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_EXPENSE");
+        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_INCOME");
+        InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
+        InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS");
+
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(btnExpense, btnIncome))
+                .keyboardRow(new InlineKeyboardRow(btnStatement))
+                .keyboardRow(new InlineKeyboardRow(btnReturn))
+                .build();
+    }
+
+
+    public static InlineKeyboardMarkup createListWallets(Paginated<Wallet> wallets) {
+        List<InlineKeyboardRow> rows = new ArrayList<>();
+
+        List<Wallet> walletsList = wallets.content();
+
+        for (Wallet wallet : walletsList) {
+            String callbackData = "SEL_WALLET:" + wallet.getId();
+
+            InlineKeyboardButton button = createButton("\uD83D\uDCB3 " + wallet.getName(), callbackData);
+
+            rows.add(new InlineKeyboardRow(button));
+        }
+
+
+        rows.add(new InlineKeyboardRow(createButton("➕ Nova Carteira", "BTN_CREATE_WALLET")));
+        rows.add(new InlineKeyboardRow(createBackButton("BTN_MAIN_MENU")));
+
+        return InlineKeyboardMarkup.builder().keyboard(rows).build();
+    }
+
+    public static InlineKeyboardButton createButton(String text, String callbackData) {
         return InlineKeyboardButton.builder()
                 .text(text)
                 .callbackData(callbackData)
                 .build();
+    }
+
+    public static InlineKeyboardButton createBackButton(String callbackData) {
+        return createButton("\uD83D\uDD19 Voltar", callbackData);
     }
 }

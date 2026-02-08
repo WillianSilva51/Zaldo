@@ -39,7 +39,7 @@ public class StartCommandHandler implements TelegramCommandHandler {
                     .build();
             createUserUseCase.execute(newUser);
 
-            messageAnswer = "👋 Olá, <b>" + username + "</b>! Bem-vindo ao Zaldo. \n\nSua conta foi criada! O que deseja fazer hoje?";
+            messageAnswer = "👋 Olá, <b>" + username + "</b>! Bem-vindo ao Zaldo. \n\nSua conta foi criada! Comece criando sua primeira carteira.";
         } else {
             messageAnswer = "👋 Olá de volta, <b>" + username + "</b>! \n\nComo posso ajudar suas finanças hoje?";
         }

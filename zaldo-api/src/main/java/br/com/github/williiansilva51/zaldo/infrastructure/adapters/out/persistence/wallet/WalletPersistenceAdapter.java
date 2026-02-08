@@ -11,6 +11,7 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persisten
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Paginated<Wallet> findByUserId(String userId, int page, int size, WalletSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
 

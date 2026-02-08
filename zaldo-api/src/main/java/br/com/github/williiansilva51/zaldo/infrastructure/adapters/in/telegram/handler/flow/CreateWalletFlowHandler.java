@@ -1,13 +1,14 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByIdUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.user.UpdateUserUseCase;
+import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.user.UpdateUserRequest;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.CreateWalletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -20,33 +21,33 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class LoginFlowHandler implements FlowHandler {
+public class CreateWalletFlowHandler implements FlowHandler {
     private final UserSessionManager sessionManager;
+    private final CreateWalletUseCase createWalletUseCase;
     private final FindUserByIdUseCase findUserByIdUseCase;
-    private final UpdateUserUseCase updateUserUseCase;
     private final Validator validator;
 
     @Override
     public boolean canHandle(ChatState chatState) {
-        return chatState.name().startsWith("WAITING_LOGIN");
+        return chatState.name().startsWith("WAITING_WALLET");
     }
 
     @Override
     public SendMessage handleInput(Long chatId, String text, String userId) {
         FlowContext context = sessionManager.get(chatId);
 
-        if (context.getChatState().equals(ChatState.WAITING_LOGIN_EMAIL)) {
-            return processEmailInput(chatId, text, context);
-        } else if (context.getChatState().equals(ChatState.WAITING_LOGIN_PASSWORD)) {
-            return processPasswordInput(chatId, text, context, userId);
+        if (context.getChatState().equals(ChatState.WAITING_WALLET_NAME)) {
+            return processWalletNameInput(chatId, text, context);
+        } else if (context.getChatState().equals(ChatState.WAITING_WALLET_DESCRIPTION)) {
+            return processWalletDescriptionInput(chatId, text, context, userId);
         }
 
         return null;
     }
 
-    private SendMessage processEmailInput(Long chatId, String text, FlowContext context) {
-        Set<ConstraintViolation<UpdateUserRequest>> violations =
-                validator.validateValue(UpdateUserRequest.class, "email", text);
+    private SendMessage processWalletNameInput(Long chatId, String text, FlowContext context) {
+        Set<ConstraintViolation<CreateWalletRequest>> violations = validator
+                .validateValue(CreateWalletRequest.class, "name", text);
 
         if (!violations.isEmpty()) {
             String msgError = violations.iterator().next().getMessage();
@@ -57,39 +58,41 @@ public class LoginFlowHandler implements FlowHandler {
                     .build();
         }
 
-        context.setTempEmail(text);
-        context.setChatState(ChatState.WAITING_LOGIN_PASSWORD);
+        context.setChatState(ChatState.WAITING_WALLET_DESCRIPTION);
+        context.setTempWalletName(text);
+
         sessionManager.save(chatId, context);
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("📧 E-mail salvo! Agora digite sua <b>senha</b>:")
-                .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LOGIN"))).build())
+                .text("📧 Nome salvo! Agora digite a descrição da <b>carteira</b> (Opcional):")
+                .replyMarkup(InlineKeyboardMarkup.builder()
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_CREATE_WALLET"))).build())
+                .replyMarkup(InlineKeyboardMarkup.builder()
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular descrição", "BTN_SKIP_DESCRIPTION"))).build())
                 .parseMode("HTML")
                 .build();
     }
 
-    private SendMessage processPasswordInput(Long chatId, String text, FlowContext context, String userId) {
+    private SendMessage processWalletDescriptionInput(Long chatId, String text, FlowContext context, String userId) {
         User user = findUserByIdUseCase.execute(userId);
 
-        String email = context.getTempEmail();
+        Wallet wallet = Wallet.builder()
+                .name(context.getTempWalletName())
+                .description(context.getTempWalletDescription())
+                .user(user)
+                .build();
 
-        // TODO: Encriptar aqui (BCrypt)
-
-        user.update(User.builder()
-                .email(email)
-                .password(text)
-                .build());
-
-        updateUserUseCase.execute(user.getId(), user);
+        createWalletUseCase.execute(wallet);
 
         sessionManager.clearSession(chatId);
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("✅ <b>Sucesso!</b> Login configurado.\n\nO que deseja fazer agora?")
+                .text("✅ <b>Sucesso!</b> Carteira criada.\n\nO que deseja fazer agora?")
                 .parseMode("HTML")
-                .replyMarkup(MenuUtils.createMainKeyboard())
+                .replyMarkup(InlineKeyboardMarkup.builder()
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS"))).build())
                 .build();
     }
 }

@@ -129,9 +129,11 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
     }
 
     private void handleCallback(CallbackQuery callbackQuery) {
-        String action = callbackQuery.getData();
+        String actionRaw = callbackQuery.getData();
 
-        TelegramCallbackHandler handler = callbackHandlers.get(action);
+        String actionKey = actionRaw.contains(":") ? actionRaw.split(":")[0] : actionRaw;
+
+        TelegramCallbackHandler handler = callbackHandlers.get(actionKey);
 
         if (handler != null) {
             User user = findUserByTelegramIdUseCase.execute(callbackQuery.getFrom().getId().toString())
