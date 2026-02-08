@@ -128,22 +128,6 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         executeClient(sendMessage);
     }
 
-    private @Nullable String authenticateUser(String telegramId, FlowContext context, Long chatId) {
-        String userId = context.getAuthenticatedUserId();
-
-        if (userId == null) {
-            Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
-
-            if (userOptional.isPresent()) {
-                userId = userOptional.get().getId();
-                context.setAuthenticatedUserId(userId);
-
-                sessionManager.save(chatId, context);
-            }
-        }
-        return userId;
-    }
-
     private void handleCallback(CallbackQuery callbackQuery) {
         String action = callbackQuery.getData();
 
@@ -163,6 +147,22 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
 
             executeClient(sendMessage);
         }
+    }
+
+    private @Nullable String authenticateUser(String telegramId, FlowContext context, Long chatId) {
+        String userId = context.getAuthenticatedUserId();
+
+        if (userId == null) {
+            Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
+
+            if (userOptional.isPresent()) {
+                userId = userOptional.get().getId();
+                context.setAuthenticatedUserId(userId);
+
+                sessionManager.save(chatId, context);
+            }
+        }
+        return userId;
     }
 
     @AfterBotRegistration

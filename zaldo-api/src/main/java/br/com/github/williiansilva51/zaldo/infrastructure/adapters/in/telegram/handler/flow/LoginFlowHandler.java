@@ -6,6 +6,7 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.user.UpdateUserUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.user.UpdateUserRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -83,8 +84,9 @@ public class LoginFlowHandler implements FlowHandler {
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("✅ <b>Login Configurado!</b>\nAgora você pode acessar o Zaldo Web.")
+                .text("✅ <b>Sucesso!</b> Login configurado.\n\nO que deseja fazer agora?")
                 .parseMode("HTML")
+                .replyMarkup(MenuUtils.createMainKeyboard())
                 .build();
     }
 }
