@@ -37,4 +37,5 @@ api:
   security:
     token:
       # Defina um segredo padrão longo para dev, sobrescreva em prod
-      secret: ${TOKEN:345345fsdf345345sdfsdf345345sdfsdfgsdfg345345}
+      secret: ${TOKEN_JWT:345345fsdf345345sdfsdf345345sdfsdfgsdfg345345}
+      bot: ${TOKEN_TELEGRAM_BOT}

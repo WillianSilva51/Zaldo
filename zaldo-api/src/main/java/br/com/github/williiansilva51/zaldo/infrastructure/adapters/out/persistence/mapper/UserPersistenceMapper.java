@@ -12,6 +12,7 @@ public class UserPersistenceMapper implements PersistenceMapper<UserEntity, User
 
         return UserEntity.builder()
                 .id(domain.getId())
+                .telegramId(domain.getTelegramId())
                 .name(domain.getName())
                 .email(domain.getEmail())
                 .password(domain.getPassword())
@@ -24,6 +25,7 @@ public class UserPersistenceMapper implements PersistenceMapper<UserEntity, User
 
         return User.builder()
                 .id(entity.getId())
+                .telegramId(entity.getTelegramId())
                 .name(entity.getName())
                 .email(entity.getEmail())
                 .password(entity.getPassword())

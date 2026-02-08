@@ -4,9 +4,9 @@ import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.exceptions.DomainValidationException;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.UpdateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

@@ -6,9 +6,9 @@ import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundExcep
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
