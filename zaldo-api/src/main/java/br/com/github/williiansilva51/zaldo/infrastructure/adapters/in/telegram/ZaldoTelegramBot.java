@@ -10,6 +10,8 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.h
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
@@ -32,6 +34,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
@@ -87,7 +90,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         try {
             telegramClient.execute(method);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("Erro ao executar método na API do Telegram: {}", e.getMessage(), e);
         }
     }
 
@@ -98,18 +101,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         String userName = message.getFrom().getUserName();
 
         FlowContext context = sessionManager.get(chatId);
-        String userId = context.getAuthenticatedUserId();
-
-        if (userId == null) {
-            Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
-
-            if (userOptional.isPresent()) {
-                userId = userOptional.get().getId();
-                context.setAuthenticatedUserId(userId);
-
-                sessionManager.save(chatId, context);
-            }
-        }
+        String userId = authenticateUser(telegramId, context, chatId);
 
         if (userId != null && context.getChatState() != ChatState.IDLE) {
             SendMessage flowResponse = flowRouter.route(context.getChatState(), chatId, text, userId);
@@ -136,6 +128,22 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         executeClient(sendMessage);
     }
 
+    private @Nullable String authenticateUser(String telegramId, FlowContext context, Long chatId) {
+        String userId = context.getAuthenticatedUserId();
+
+        if (userId == null) {
+            Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
+
+            if (userOptional.isPresent()) {
+                userId = userOptional.get().getId();
+                context.setAuthenticatedUserId(userId);
+
+                sessionManager.save(chatId, context);
+            }
+        }
+        return userId;
+    }
+
     private void handleCallback(CallbackQuery callbackQuery) {
         String action = callbackQuery.getData();
 
@@ -159,6 +167,6 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
 
     @AfterBotRegistration
     public void afterRegistration(BotSession botSession) {
-        System.out.println("Registered bot running state is: " + botSession.isRunning());
+        log.info("Bot registrado com sucesso. Estado de execução: {}", botSession.isRunning());
     }
 }

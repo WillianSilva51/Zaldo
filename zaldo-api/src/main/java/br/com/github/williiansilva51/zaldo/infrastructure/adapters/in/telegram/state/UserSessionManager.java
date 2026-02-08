@@ -1,17 +1,20 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state;
 
-import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
 @Component
-@RequiredArgsConstructor
 public class UserSessionManager {
     private static final Duration EXPIRATION = Duration.ofMinutes(30);
     private final RedisTemplate<String, FlowContext> redisTemplate;
+
+    public UserSessionManager(@Qualifier("flowContextRedisTemplate") RedisTemplate<String, FlowContext> redis) {
+        redisTemplate = redis;
+    }
 
     private @NonNull String getKey(Long userId) {
         return "session:" + userId;

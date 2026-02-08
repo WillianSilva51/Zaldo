@@ -70,7 +70,7 @@ public class LoginFlowHandler implements FlowHandler {
 
         String email = context.getTempEmail();
 
-        // Ideal: Encriptar aqui (BCrypt)
+        // TODO: Encriptar aqui (BCrypt)
 
         user.update(User.builder()
                 .email(email)

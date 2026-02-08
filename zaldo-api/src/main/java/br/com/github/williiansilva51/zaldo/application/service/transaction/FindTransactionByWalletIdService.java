@@ -23,10 +23,6 @@ public class FindTransactionByWalletIdService implements FindTransactionByWallet
     public Paginated<Transaction> execute(Long walletId, int page, int size, TransactionSortField sort, DirectionOrder direction) {
         Wallet wallet = findWalletByIdUseCase.execute(walletId);
 
-        if (wallet == null) {
-            throw new IllegalArgumentException("Carteira não encontrada.");
-        }
-
-        return transactionRepositoryPort.findByWalletId(walletId, page, size, sort, direction);
+        return transactionRepositoryPort.findByWalletId(wallet.getId(), page, size, sort, direction);
     }
 }
