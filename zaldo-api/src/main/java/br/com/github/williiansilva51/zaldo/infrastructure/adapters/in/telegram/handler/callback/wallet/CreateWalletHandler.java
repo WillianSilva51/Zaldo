@@ -1,8 +1,8 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.wallet;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +27,7 @@ public class CreateWalletHandler implements TelegramCallbackHandler {
     public BotApiMethod<?> execute(CallbackQuery callbackQuery, User user) {
         Long chatId = callbackQuery.getMessage().getChatId();
 
-        FlowContext context = sessionManager.get(chatId);
-
-        context.setChatState(ChatState.WAITING_WALLET_NAME);
-
-        sessionManager.save(chatId, context);
+        sessionManager.setChatState(chatId, ChatState.WAITING_WALLET_NAME);
 
         return SendMessage.builder()
                 .chatId(chatId)

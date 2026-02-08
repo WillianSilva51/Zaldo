@@ -1,7 +1,6 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.command;
 
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +24,7 @@ public class LoginCommandHandler implements TelegramCommandHandler {
     public SendMessage execute(Message message, String username) {
         Long chatId = message.getChatId();
 
-        FlowContext context = userSessionManager.get(chatId);
-
-        context.setChatState(ChatState.WAITING_LOGIN_EMAIL);
-
-        userSessionManager.save(chatId, context);
+        userSessionManager.setChatState(chatId, ChatState.WAITING_LOGIN_EMAIL);
 
         return SendMessage.builder()
                 .chatId(chatId)

@@ -2,11 +2,11 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
-import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.CacheUtils;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.CreateWalletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -24,7 +24,7 @@ import java.util.Set;
 public class CreateWalletFlowHandler implements FlowHandler {
     private final UserSessionManager sessionManager;
     private final CreateWalletUseCase createWalletUseCase;
-    private final FindUserByIdUseCase findUserByIdUseCase;
+    private final CacheUtils cacheUtils;
     private final Validator validator;
 
     @Override
@@ -75,7 +75,7 @@ public class CreateWalletFlowHandler implements FlowHandler {
     }
 
     private SendMessage processWalletDescriptionInput(Long chatId, String text, FlowContext context, String userId) {
-        User user = findUserByIdUseCase.execute(userId);
+        User user = cacheUtils.getAuthenticatedUser(userId, chatId);
 
         Wallet wallet = Wallet.builder()
                 .name(context.getTempWalletName())

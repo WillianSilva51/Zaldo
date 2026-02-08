@@ -17,12 +17,14 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class WalletPersistenceAdapter implements WalletRepositoryPort {
     private final SpringDataWalletRepository walletRepository;
     private final WalletPersistenceMapper walletMapper;
     private final PageUtils pageUtils;
 
     @Override
+    @Transactional
     public Wallet save(Wallet wallet) {
         WalletEntity entity = walletMapper.toEntity(wallet);
         WalletEntity savedEntity = walletRepository.save(entity);
@@ -36,7 +38,6 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Paginated<Wallet> findByUserId(String userId, int page, int size, WalletSortField sort, DirectionOrder direction) {
         Pageable pageable = pageUtils.createPageRequest(page, size, sort, direction);
 
@@ -45,6 +46,7 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
 
     }

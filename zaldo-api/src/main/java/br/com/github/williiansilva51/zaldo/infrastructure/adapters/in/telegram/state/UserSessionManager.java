@@ -43,4 +43,12 @@ public class UserSessionManager {
         String key = getKey(chatId);
         redisTemplate.delete(key);
     }
+
+    public void setChatState(Long chatId, ChatState chatState) {
+        FlowContext flowContext = get(chatId);
+
+        flowContext.setChatState(chatState);
+
+        save(chatId, flowContext);
+    }
 }

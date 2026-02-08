@@ -27,11 +27,12 @@ public class MenuUtils {
         InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_EXPENSE");
         InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_INCOME");
         InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
+        InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", "BTN_DELETE_WALLET");
         InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS");
 
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(new InlineKeyboardRow(btnExpense, btnIncome))
-                .keyboardRow(new InlineKeyboardRow(btnStatement))
+                .keyboardRow(new InlineKeyboardRow(btnStatement, btnDeleteWallet))
                 .keyboardRow(new InlineKeyboardRow(btnReturn))
                 .build();
     }
@@ -48,6 +49,18 @@ public class MenuUtils {
             InlineKeyboardButton button = createButton("\uD83D\uDCB3 " + wallet.getName(), callbackData);
 
             rows.add(new InlineKeyboardRow(button));
+        }
+
+        if (wallets.hasPrevious()) {
+            rows.add(new InlineKeyboardRow(
+                    createButton("⬅\uFE0F Anterior", "WALLETS_PAGE:" + (wallets.currentPage() - 1))
+            ));
+        }
+
+        if (wallets.hasNext()) {
+            rows.add(new InlineKeyboardRow(
+                    createButton("➡\uFE0F Próxima", "WALLETS_PAGE:" + (wallets.currentPage() + 1))
+            ));
         }
 
 

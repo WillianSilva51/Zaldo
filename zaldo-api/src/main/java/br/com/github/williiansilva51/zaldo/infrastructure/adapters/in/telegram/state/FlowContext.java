@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state;
 
 
+import br.com.github.williiansilva51.zaldo.core.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +18,7 @@ public class FlowContext implements Serializable {
 
     private ChatState chatState = ChatState.IDLE;
 
-    private String authenticatedUserId;
+    private User authenticatedUser;
     private String tempEmail;
 
     // Dados Temporários (Carteira e Transação)
@@ -30,16 +31,4 @@ public class FlowContext implements Serializable {
     private BigDecimal tempAmount;
     private String tempTransactionDescription;
     private Date tempDate;
-
-    public void clear() {
-        chatState = ChatState.IDLE;
-        tempEmail = null;
-        tempUserId = null;
-        tempWalletName = null;
-        tempWalletDescription = null;
-        tempWalletId = null;
-        tempAmount = null;
-        tempTransactionDescription = null;
-        tempDate = null;
-    }
 }
