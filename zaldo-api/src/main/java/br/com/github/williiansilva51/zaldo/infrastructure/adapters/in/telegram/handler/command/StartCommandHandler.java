@@ -3,13 +3,11 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.CreateUserUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegramIdUseCase;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -40,38 +38,16 @@ public class StartCommandHandler implements TelegramCommandHandler {
                     .password(UUID.randomUUID().toString())
                     .build();
             createUserUseCase.execute(newUser);
-            messageAnswer = String.format(
-                    """
-                            👋 Olá, <b>%s</b>! Seja bem-vindo ao <b>Zaldo</b>. Sua conta já está ativa! 🚀
-                            
-                            Quer levar sua gestão para o próximo nível? Configure um e-mail e senha para acessar nossa <b>versão Web</b>.
-                            
-                            Basta clicar aqui:""",
-                    username
-            );
 
-            InlineKeyboardMarkup markup = InlineKeyboardMarkup.builder()
-                    .keyboardRow(new InlineKeyboardRow(
-                                    InlineKeyboardButton.builder()
-                                            .text("Configurar Acesso \uD83D\uDD11")
-                                            .callbackData("BTN_LOGIN")
-                                            .build()
-                            )
-                    ).build();
-
-            return SendMessage.builder()
-                    .text(messageAnswer)
-                    .chatId(chatId)
-                    .replyMarkup(markup)
-                    .parseMode("HTML")
-                    .build();
+            messageAnswer = "👋 Olá, <b>" + username + "</b>! Bem-vindo ao Zaldo. \n\nSua conta foi criada! Que tal começar criando sua primeira carteira?";
         } else {
-            messageAnswer = "Olá novamente, <b>" + username + "</b>! Você já tem cadastro.";
+            messageAnswer = "👋 Olá de volta, <b>" + username + "</b>! \n\nComo posso ajudar suas finanças hoje?";
         }
 
         return SendMessage.builder()
                 .text(messageAnswer)
                 .chatId(chatId)
+                .replyMarkup(MenuUtils.createMainKeyboard())
                 .parseMode("HTML")
                 .build();
     }

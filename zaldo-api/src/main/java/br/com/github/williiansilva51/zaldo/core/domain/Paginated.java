@@ -8,4 +8,19 @@ public record Paginated<T>(
         int totalPages,
         int currentPage
 ) {
+    public boolean hasNext() {
+        return currentPage < (totalPages - 1);
+    }
+
+    public boolean hasPrevious() {
+        return currentPage > 0;
+    }
+
+    public int nextPage() {
+        return currentPage + 1;
+    }
+
+    public int previousPage() {
+        return currentPage - 1;
+    }
 }
