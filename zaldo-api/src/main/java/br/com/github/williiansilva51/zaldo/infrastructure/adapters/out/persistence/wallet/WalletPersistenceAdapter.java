@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
@@ -48,6 +49,11 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     @Override
     @Transactional
     public void deleteById(Long id) {
+        walletRepository.deleteById(id);
+    }
 
+    @Override
+    public BigDecimal getTotalBalanceByWalletAndUser(Long walletId, String userId) {
+        return walletRepository.getBalanceByWalletAndUser(walletId, userId);
     }
 }

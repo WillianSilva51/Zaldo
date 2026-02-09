@@ -12,18 +12,21 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persisten
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TransactionPersistenceAdapter implements TransactionRepositoryPort {
     private final SpringDataTransactionRepository springDataTransactionRepository;
     private final TransactionPersistenceMapper mapper;
     private final PageUtils pageUtils;
 
     @Override
+    @Transactional
     public Transaction save(Transaction transaction) {
         TransactionEntity entity = mapper.toEntity(transaction);
 
@@ -68,6 +71,7 @@ public class TransactionPersistenceAdapter implements TransactionRepositoryPort 
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         springDataTransactionRepository.deleteById(id);
     }

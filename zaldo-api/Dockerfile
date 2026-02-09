@@ -1,7 +1,7 @@
 # Stage 1: Build
 FROM docker.io/maven:3.9-eclipse-temurin-25-alpine AS builder
 
-LABEL authors="willlian"
+LABEL authors="willian"
 
 WORKDIR /builder
 

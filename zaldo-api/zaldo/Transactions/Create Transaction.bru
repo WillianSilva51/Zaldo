@@ -34,7 +34,7 @@ script:pre-request {
     "amount": Number((Math.random() * 100).toFixed(2)),
     "type": ["EXPENSE", "INCOME"][Math.floor(Math.random() * 2)],
     "date": new Date().toISOString().split('T')[0], // Formata para YYYY-MM-DD
-    "walletId": 1
+    "walletId": 3
   });
 }
 

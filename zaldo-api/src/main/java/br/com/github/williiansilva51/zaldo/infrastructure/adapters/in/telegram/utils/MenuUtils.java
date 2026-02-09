@@ -27,7 +27,7 @@ public class MenuUtils {
         InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_EXPENSE");
         InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_INCOME");
         InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
-        InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", "BTN_DELETE_WALLET");
+        InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", "BTN_CONFIRM_DELETE_WALLET");
         InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS");
 
         return InlineKeyboardMarkup.builder()

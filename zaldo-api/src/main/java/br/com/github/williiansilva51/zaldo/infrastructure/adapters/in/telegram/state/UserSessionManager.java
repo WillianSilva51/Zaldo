@@ -9,7 +9,7 @@ import java.time.Duration;
 
 @Component
 public class UserSessionManager {
-    private static final Duration EXPIRATION = Duration.ofMinutes(30);
+    private static final Duration EXPIRATION = Duration.ofMinutes(20);
     private final RedisTemplate<String, FlowContext> redisTemplate;
 
     public UserSessionManager(@Qualifier("flowContextRedisTemplate") RedisTemplate<String, FlowContext> redis) {

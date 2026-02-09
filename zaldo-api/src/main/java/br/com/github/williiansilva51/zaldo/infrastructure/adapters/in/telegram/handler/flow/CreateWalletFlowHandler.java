@@ -74,7 +74,7 @@ public class CreateWalletFlowHandler implements FlowHandler {
     }
 
     private SendMessage processWalletDescriptionInput(Long chatId, String text, FlowContext context, String userId) {
-        User user = userCacheService.getAuthenticatedUser(userId, chatId);
+        User user = context.getAuthenticatedUser();
 
         Wallet wallet = Wallet.builder()
                 .name(context.getTempWalletName())

@@ -31,6 +31,29 @@ services:
       retries: 3
       start_period: 5s
 
+  zaldo-api:
+    container_name: zaldo-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-zaldo}
+      - POSTGRES_USER=${DB_USER:-admin}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-admin}
+
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+
+      - TOKEN_TELEGRAM_BOT=${TOKEN_TELEGRAM_BOT}
+      - TOKEN_JWT=${TOKEN_JWT:-dev-secret-change-me}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
 volumes:
   postgres_data:
   redis_data:

@@ -2,8 +2,6 @@ package br.com.github.williiansilva51.zaldo.core.domain;
 
 import lombok.*;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,10 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Wallet implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class Wallet {
     private Long id;
     private String name;
     private String description;

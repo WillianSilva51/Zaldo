@@ -5,6 +5,7 @@ import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.sort.WalletSortField;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface WalletRepositoryPort {
@@ -15,4 +16,6 @@ public interface WalletRepositoryPort {
     Paginated<Wallet> findByUserId(String userId, int page, int size, WalletSortField sort, DirectionOrder direction);
 
     void deleteById(Long id);
+
+    BigDecimal getTotalBalanceByWalletAndUser(Long walletId, String userId);
 }
