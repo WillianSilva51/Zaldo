@@ -1,7 +1,9 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.wallet;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -15,34 +17,52 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 @Component
 @RequiredArgsConstructor
-public class ConfirmDeleteWalletCallbackHandler implements TelegramCallbackHandler {
+public class CreateTransactionCallbackHandler implements TelegramCallbackHandler {
     private final UserSessionManager sessionManager;
 
     @Override
     public String getActionName() {
-        return "BTN_CONFIRM_DELETE_WALLET";
+        return "BTN_NEW_TRANSACTION";
     }
 
     @Override
     public BotApiMethod<?> execute(CallbackQuery callbackQuery, User user) {
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
+        String data = callbackQuery.getData();
+
+        String type = data.split(":")[1];
+        TransactionType transactionType = TransactionType.valueOf(type);
 
         FlowContext context = sessionManager.get(chatId);
-        String walletName = context.getTempWalletName();
+        context.setChatState(ChatState.WAITING_TRANSACTION_DESCRIPTION);
+        context.setTempTransactionType(transactionType);
 
-        if (walletName == null) {
-            return MenuUtils.createErrorMessage(chatId, messageId, "Sessão expirada, tente novamente.");
+        Long walletId = context.getTempWalletId();
+
+        if (walletId == null) {
+            return MenuUtils.createErrorMessage(chatId, messageId, "Selecione uma carteira primeiro.");
         }
+
+        sessionManager.save(chatId, context);
+
+        String text = transactionType == TransactionType.EXPENSE
+                ? "\uD83D\uDCB8 <b>Nova despesa</b>\n\n" +
+                "Digite a descrição da despesa.\n\n" +
+                "<i>Exemplo:</i> Mercado, Aluguel, Uber"
+                : "\uD83D\uDCB0 <b>Nova receita</b>\n\n" +
+                "Digite a descrição da receita.\n\n" +
+                "<i>Exemplo:</i> Salário, Freelance, Reembolso";
+
 
         return EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)
-                .text("Tem certeza de que deseja excluir a carteira \"" + walletName + "\"? Essa ação não pode ser desfeita.")
+                .text(text)
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("\uD83D\uDDD1\uFE0F Excluir carteira", "BTN_DELETE_WALLET")))
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + context.getTempWalletId())))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + walletId)))
                         .build())
+                .parseMode("HTML")
                 .build();
     }
 }

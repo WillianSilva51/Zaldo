@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,5 +31,6 @@ public class FlowContext implements Serializable {
     private Long tempWalletId;
     private BigDecimal tempAmount;
     private String tempTransactionDescription;
+    private TransactionType tempTransactionType;
     private Date tempDate;
 }
