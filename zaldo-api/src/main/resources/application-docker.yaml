@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: zaldo-api
+
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://postgres:5432/zaldo}
+    username: ${POSTGRES_USER:zaldo}
+    password: ${POSTGRES_PASSWORD:zaldo}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  jackson:
+    serialization:
+      indent_output: true
+api:
+  security:
+    token:
+      secret: ${TOKEN_JWT:dev-secret-change-me}
+      bot: ${TOKEN_TELEGRAM_BOT:}
