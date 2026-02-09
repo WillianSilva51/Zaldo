@@ -11,6 +11,9 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.re
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.PaginatedResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.TransactionResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper.TransactionMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -27,6 +30,7 @@ import java.util.List;
 @RequestMapping("/transactions")
 @Validated
 @RequiredArgsConstructor
+@Tag(name = "Transactions", description = "Endpoints to manage transactions")
 public class TransactionController {
     private final CreateTransactionUseCase createTransactionUseCase;
     private final ListTransactionUseCase listTransactionUseCase;
@@ -36,6 +40,8 @@ public class TransactionController {
     private final TransactionMapper transactionMapper;
 
     @PostMapping
+    @Operation(summary = "Creates a new transaction", description = "Returns the created transaction")
+    @ApiResponse(responseCode = "201", description = "Transaction created successfully")
     public ResponseEntity<TransactionResponse> createTransaction(@RequestBody @Valid CreateTransactionRequest request) {
         Transaction domainObject = transactionMapper.toDomain(request);
 
@@ -47,6 +53,8 @@ public class TransactionController {
     }
 
     @GetMapping
+    @Operation(summary = "Lists all transactions", description = "Returns a list of transactions")
+    @ApiResponse(responseCode = "200", description = "Transactions found successfully")
     public ResponseEntity<PaginatedResponse<TransactionResponse>> getAllTransactions(@RequestParam(required = false) TransactionType type,
                                                                                      @RequestParam(required = false) LocalDate date,
                                                                                      @RequestParam(defaultValue = "0") @Min(value = 0, message = "Valor mínimo da página é 0") int page,
@@ -71,6 +79,8 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Finds a transaction by id", description = "Returns the transaction found")
+    @ApiResponse(responseCode = "200", description = "Transaction found successfully")
     public ResponseEntity<TransactionResponse> getTransactionById(@PathVariable Long id) {
         Transaction transaction = findTransactionByIdUseCase.execute(id);
 
@@ -78,6 +88,8 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Deletes a transaction by id", description = "Returns no content")
+    @ApiResponse(responseCode = "204", description = "Transaction deleted successfully")
     public ResponseEntity<Void> deleteTransactionById(@PathVariable Long id) {
         deleteTransactionByIdUseCase.execute(id);
 
@@ -85,6 +97,8 @@ public class TransactionController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Updates a transaction by id", description = "Returns the updated transaction")
+    @ApiResponse(responseCode = "200", description = "Transaction updated successfully")
     public ResponseEntity<TransactionResponse> updateTransaction(@PathVariable Long id, @RequestBody @Valid UpdateTransactionRequest request) {
         Transaction newInfo = transactionMapper.toDomainByUpdate(request);
 
