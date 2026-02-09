@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 @Component
 @RequiredArgsConstructor
-public class SelectWalletHandler implements TelegramCallbackHandler {
+public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
     private final UserSessionManager sessionManager;
     private final FindWalletByIdUseCase findWalletByIdUseCase;
 

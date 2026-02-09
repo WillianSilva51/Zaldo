@@ -70,7 +70,7 @@ public class LoginFlowHandler implements FlowHandler {
     }
 
     private SendMessage processPasswordInput(Long chatId, String text, FlowContext context, String userId) {
-        User user = userCacheService.getAuthenticatedUser(userId, chatId);
+        User user = context.getAuthenticatedUser();
 
         String email = context.getTempEmail();
 

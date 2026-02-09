@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 @Component
 @RequiredArgsConstructor
-public class CreateWalletHandler implements TelegramCallbackHandler {
+public class CreateWalletCallbackHandler implements TelegramCallbackHandler {
     private final UserSessionManager sessionManager;
 
     @Override
