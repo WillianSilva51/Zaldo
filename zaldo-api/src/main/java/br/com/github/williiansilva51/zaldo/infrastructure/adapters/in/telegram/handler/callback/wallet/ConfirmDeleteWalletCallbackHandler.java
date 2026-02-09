@@ -31,6 +31,15 @@ public class ConfirmDeleteWalletCallbackHandler implements TelegramCallbackHandl
         FlowContext context = sessionManager.get(chatId);
         String walletName = context.getTempWalletName();
 
+        if (walletName == null) {
+            return EditMessageText.builder()
+                    .chatId(chatId)
+                    .messageId(messageId)
+                    .text("Sessão expirada, tente novamente.")
+                    .replyMarkup(MenuUtils.createMainKeyboard())
+                    .build();
+        }
+
         return EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)

@@ -16,7 +16,7 @@ public class HelpCommandHandler implements TelegramCommandHandler {
     public SendMessage execute(Message message, String username) {
         return SendMessage.builder()
                 .chatId(message.getChatId())
-                .text(String.format("🤔 %s, não entendi esse comando.\n\nUse o menu abaixo para navegar:", username))
+                .text(String.format("🆘 Olá, %s!\n\nUse o menu abaixo para navegar pelas funções do bot e encontrar o que precisa.", username))
                 .replyMarkup(MenuUtils.createMainKeyboard())
                 .build();
     }
