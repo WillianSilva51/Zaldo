@@ -4,10 +4,10 @@ import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.command.TelegramCommandHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.FlowRouter;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.service.UserCacheService;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.CacheUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,21 +33,21 @@ import java.util.stream.Collectors;
 public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
-    private final CacheUtils cacheUtils;
+    private final UserCacheService userCacheService;
     private final Map<String, TelegramCommandHandler> commandHandlers;
     private final Map<String, TelegramCallbackHandler> callbackHandlers;
     private final FlowRouter flowRouter;
     private final UserSessionManager sessionManager;
 
     public ZaldoTelegramBot(@Value("${api.security.token.bot}") String token,
-                            CacheUtils cache,
+                            UserCacheService cache,
                             List<TelegramCommandHandler> commandList,
                             List<TelegramCallbackHandler> callbackList,
                             FlowRouter router,
                             UserSessionManager manager) {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(getBotToken());
-        cacheUtils = cache;
+        userCacheService = cache;
         commandHandlers = commandList.stream()
                 .collect(Collectors.toMap(TelegramCommandHandler::getCommandName, Function.identity()));
         callbackHandlers = callbackList.stream()
@@ -95,7 +95,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         String userName = message.getFrom().getUserName();
 
         FlowContext context = sessionManager.get(chatId);
-        User user = cacheUtils.getAuthenticatedUser(telegramId, chatId);
+        User user = userCacheService.getAuthenticatedUser(telegramId, chatId);
 
         if (user != null && context.getChatState() != ChatState.IDLE) {
             SendMessage flowResponse = flowRouter.route(context.getChatState(), chatId, text, user.getId());
@@ -128,7 +128,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         String actionRaw = callbackQuery.getData();
         String actionKey = actionRaw.contains(":") ? actionRaw.split(":")[0] : actionRaw;
 
-        User user = cacheUtils.getAuthenticatedUser(telegramId, chatId);
+        User user = userCacheService.getAuthenticatedUser(telegramId, chatId);
 
         if (user == null) {
             return;

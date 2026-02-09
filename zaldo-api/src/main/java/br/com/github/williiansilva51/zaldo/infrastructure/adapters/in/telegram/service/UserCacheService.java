@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.service;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegramIdUseCase;
@@ -6,14 +6,14 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.s
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Component
+@Service
 @Slf4j
 @RequiredArgsConstructor
-public class CacheUtils {
+public class UserCacheService {
     private final UserSessionManager sessionManager;
     private final FindUserByTelegramIdUseCase findUserByTelegramIdUseCase;
 

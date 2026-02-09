@@ -3,10 +3,10 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.service.UserCacheService;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.CacheUtils;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.CreateWalletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -24,7 +24,7 @@ import java.util.Set;
 public class CreateWalletFlowHandler implements FlowHandler {
     private final UserSessionManager sessionManager;
     private final CreateWalletUseCase createWalletUseCase;
-    private final CacheUtils cacheUtils;
+    private final UserCacheService userCacheService;
     private final Validator validator;
 
     @Override
@@ -67,15 +67,14 @@ public class CreateWalletFlowHandler implements FlowHandler {
                 .chatId(chatId)
                 .text("📧 Nome salvo! Agora digite a descrição da <b>carteira</b> (Opcional):")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_CREATE_WALLET"))).build())
-                .replyMarkup(InlineKeyboardMarkup.builder()
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_CREATE_WALLET")))
                         .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular descrição", "BTN_SKIP_DESCRIPTION"))).build())
                 .parseMode("HTML")
                 .build();
     }
 
     private SendMessage processWalletDescriptionInput(Long chatId, String text, FlowContext context, String userId) {
-        User user = cacheUtils.getAuthenticatedUser(userId, chatId);
+        User user = userCacheService.getAuthenticatedUser(userId, chatId);
 
         Wallet wallet = Wallet.builder()
                 .name(context.getTempWalletName())
