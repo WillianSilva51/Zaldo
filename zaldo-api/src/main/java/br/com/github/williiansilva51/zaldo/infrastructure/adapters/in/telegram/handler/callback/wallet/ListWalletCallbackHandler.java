@@ -31,11 +31,22 @@ public class ListWalletCallbackHandler implements TelegramCallbackHandler {
     public BotApiMethod<?> execute(CallbackQuery callbackQuery, User user) {
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
+        String data = callbackQuery.getData();
 
         sessionManager.setChatState(chatId, ChatState.IDLE);
 
+        String actionPage = data.split(":")[1];
+
+        int page;
+
+        try {
+            page = Integer.parseInt(actionPage);
+        } catch (NumberFormatException e) {
+            return MenuUtils.createErrorMessage(chatId, messageId, "Algo deu errado. Tente novamente.");
+        }
+
         Paginated<Wallet> walletPaginated = findWalletByUserIdUseCase
-                .execute(user.getId(), 0, 5, WalletSortField.createdAt, DirectionOrder.DESC);
+                .execute(user.getId(), page, 5, WalletSortField.createdAt, DirectionOrder.DESC);
 
         if (walletPaginated.totalElements() == 0) {
             return EditMessageText.builder()
