@@ -11,21 +11,18 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persisten
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class WalletPersistenceAdapter implements WalletRepositoryPort {
     private final SpringDataWalletRepository walletRepository;
     private final WalletPersistenceMapper walletMapper;
     private final PageUtils pageUtils;
 
     @Override
-    @Transactional
     public Wallet save(Wallet wallet) {
         WalletEntity entity = walletMapper.toEntity(wallet);
         WalletEntity savedEntity = walletRepository.save(entity);
@@ -47,7 +44,6 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
         walletRepository.deleteById(id);
     }

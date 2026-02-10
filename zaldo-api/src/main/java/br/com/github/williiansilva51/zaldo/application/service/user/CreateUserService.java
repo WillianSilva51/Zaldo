@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CreateUserService implements CreateUserUseCase {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
-    @Transactional
     public User execute(User user) {
         if (userRepositoryPort.findByEmail(user.getEmail()).isPresent()) {
             throw new DomainValidationException("Já existe um usuário com este e-mail.");

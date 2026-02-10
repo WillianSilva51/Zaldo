@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DeleteWalletByIdService implements DeleteWalletByIdUseCase {
     private final WalletRepositoryPort walletRepositoryPort;
     private final FindWalletByIdUseCase findWalletByIdUseCase;
 
     @Override
-    @Transactional
     public void execute(Long id, String authenticatedUserId) {
         Wallet wallet = findWalletByIdUseCase.execute(id);
 

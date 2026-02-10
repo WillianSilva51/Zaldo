@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CreateTransactionService implements CreateTransactionUseCase {
     private final TransactionRepositoryPort transactionRepositoryPort;
     private final FindWalletByIdUseCase findWalletByIdUseCase;
 
     @Override
-    @Transactional
     public Transaction execute(Transaction transaction) {
         if (transaction == null) {
             throw new IllegalArgumentException("A transação não deve ser nula");

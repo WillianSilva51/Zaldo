@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UpdateWalletService implements UpdateWalletUseCase {
     private final FindWalletByIdService findWalletByIdService;
     private final WalletRepositoryPort walletRepositoryPort;
 
     @Override
-    @Transactional
     public Wallet execute(Long id, String authenticatedUserId, Wallet wallet) {
         Wallet existingWallet = findWalletByIdService.execute(id);
 

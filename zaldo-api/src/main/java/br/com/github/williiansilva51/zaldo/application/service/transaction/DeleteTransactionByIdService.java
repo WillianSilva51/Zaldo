@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DeleteTransactionByIdService implements DeleteTransactionByIdUseCase {
     private final TransactionRepositoryPort transactionRepositoryPort;
 
     @Override
-    @Transactional
     public void execute(Long id) {
         if (transactionRepositoryPort.findById(id).isEmpty()) {
             throw new ResourceNotFoundException("Transação não encontrada com ID: " + id);

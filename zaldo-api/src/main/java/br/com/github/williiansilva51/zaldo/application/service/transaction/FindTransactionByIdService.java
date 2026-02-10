@@ -6,9 +6,11 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.FindTransac
 import br.com.github.williiansilva51.zaldo.core.ports.out.TransactionRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FindTransactionByIdService implements FindTransactionByIdUseCase {
     private final TransactionRepositoryPort transactionRepositoryPort;
 
