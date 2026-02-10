@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
@@ -24,8 +25,8 @@ public class MenuUtils {
     }
 
     public static InlineKeyboardMarkup createWalletsKeyboard() {
-        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_EXPENSE");
-        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_INCOME");
+        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_TRANSACTION:EXPENSE");
+        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_TRANSACTION:INCOME");
         InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
         InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", "BTN_CONFIRM_DELETE_WALLET");
         InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS");
@@ -79,5 +80,15 @@ public class MenuUtils {
 
     public static InlineKeyboardButton createBackButton(String callbackData) {
         return createButton("\uD83D\uDD19 Voltar", callbackData);
+    }
+
+    public static EditMessageText createErrorMessage(Long chatId, Integer messageId, String message) {
+        return EditMessageText.builder()
+                .chatId(chatId)
+                .messageId(messageId)
+                .text(message)
+                .replyMarkup(MenuUtils.createMainKeyboard())
+                .parseMode("HTML")
+                .build();
     }
 }

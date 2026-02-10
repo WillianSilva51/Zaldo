@@ -29,7 +29,9 @@ public class LoginCommandHandler implements TelegramCommandHandler {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text("Ótimo! Digite o <b>e-mail</b> que você deseja usar para o acesso Web:")
-                .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_MAIN_MENU"))).build())
+                .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils
+                                .createBackButton("BTN_MAIN_MENU")))
+                        .build())
                 .parseMode("HTML")
                 .build();
     }
