@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CreateWalletService implements CreateWalletUseCase {
     private final WalletRepositoryPort walletRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
-    @Transactional
     public Wallet execute(Wallet wallet) {
         String userId = wallet.getUser().getId();
 

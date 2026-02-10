@@ -89,7 +89,7 @@ public class CreateWalletFlowHandler implements FlowHandler {
                 .text("✅ <b>Sucesso!</b> Carteira criada.\n\nO que deseja fazer agora?")
                 .parseMode("HTML")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS"))).build())
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0"))).build())
                 .build();
     }
 }

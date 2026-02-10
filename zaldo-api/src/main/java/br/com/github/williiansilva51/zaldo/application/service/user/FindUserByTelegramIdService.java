@@ -5,11 +5,13 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegram
 import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class FindUserByTelegramIdService implements FindUserByTelegramIdUseCase {
     private final UserRepositoryPort userRepositoryPort;
 

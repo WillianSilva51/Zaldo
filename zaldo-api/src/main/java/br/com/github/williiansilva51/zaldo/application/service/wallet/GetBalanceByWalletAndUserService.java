@@ -4,11 +4,13 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.GetBalanceByWall
 import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class GetBalanceByWalletAndUserService implements GetBalanceByWalletAndUserUseCase {
     private final WalletRepositoryPort walletRepositoryPort;
 

@@ -5,6 +5,7 @@ import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.GetBalanceByWalletAndUserUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -41,6 +42,7 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
 
         FlowContext context = sessionManager.get(chatId);
 
+        context.setChatState(ChatState.IDLE);
         context.setTempWalletId(walletId);
         context.setTempWalletName(wallet.getName());
         sessionManager.save(chatId, context);

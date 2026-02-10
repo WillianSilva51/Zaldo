@@ -96,7 +96,6 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                     .text("❌ Valor inválido. Digite um número válido, exemplo: 10.50 ou 10,50")
                     .replyMarkup(InlineKeyboardMarkup.builder()
                             .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + context.getTempWalletId())))
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular data", "BTN_SKIP_DATE")))
                             .build())
                     .build();
         }
@@ -141,6 +140,7 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                         .build();
             }
         }
+
         Long walletId = context.getTempWalletId();
         Wallet wallet = Wallet.builder().id(walletId).build();
 

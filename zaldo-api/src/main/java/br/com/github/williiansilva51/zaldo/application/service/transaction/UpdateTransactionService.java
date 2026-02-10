@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UpdateTransactionService implements UpdateTransactionUseCase {
     private final TransactionRepositoryPort transactionRepositoryPort;
 
     @Override
-    @Transactional
     public Transaction execute(Long id, Transaction transaction) {
         Transaction existingTransaction = transactionRepositoryPort
                 .findById(id)

@@ -33,7 +33,7 @@ public class CreateWalletCallbackHandler implements TelegramCallbackHandler {
                 .chatId(chatId)
                 .text("Digite o nome da sua carteira:")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS")))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0")))
                         .build())
                 .build();
     }

@@ -41,7 +41,7 @@ public class DeleteWalletCallbackHandler implements TelegramCallbackHandler {
                     .messageId(messageId)
                     .text("⚠\uFE0F Erro: Não foi possível identificar a carteira. Tente listar novamente.")
                     .replyMarkup(InlineKeyboardMarkup.builder()
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS")))
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0")))
                             .build())
                     .build();
         }
@@ -55,7 +55,7 @@ public class DeleteWalletCallbackHandler implements TelegramCallbackHandler {
                     .messageId(messageId)
                     .text(("✅ <b>Carteira apagada com sucesso!</b>\n\nTodas as transações vinculadas também foram removidas."))
                     .replyMarkup(InlineKeyboardMarkup.builder()
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS"))).build())
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0"))).build())
                     .parseMode("HTML")
                     .build();
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class DeleteWalletCallbackHandler implements TelegramCallbackHandler {
                     .messageId(messageId)
                     .text("❌ Ocorreu um erro ao tentar apagar a carteira.")
                     .replyMarkup(InlineKeyboardMarkup.builder()
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS")))
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0")))
                             .build())
                     .build();
         }

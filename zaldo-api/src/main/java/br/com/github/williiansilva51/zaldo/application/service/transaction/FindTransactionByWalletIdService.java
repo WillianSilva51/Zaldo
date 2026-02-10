@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FindTransactionByWalletIdService implements FindTransactionByWalletIdUseCase {
     private final TransactionRepositoryPort transactionRepositoryPort;
     private final FindWalletByIdUseCase findWalletByIdUseCase;
 
     @Override
-    @Transactional(readOnly = true)
     public Paginated<Transaction> execute(Long walletId, int page, int size, TransactionSortField sort, DirectionOrder direction) {
         Wallet wallet = findWalletByIdUseCase.execute(walletId);
 

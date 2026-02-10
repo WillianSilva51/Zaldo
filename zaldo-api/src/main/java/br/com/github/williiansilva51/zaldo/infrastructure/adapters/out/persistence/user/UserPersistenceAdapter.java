@@ -18,7 +18,14 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
 
     @Override
     public User save(User user) {
-        UserEntity entity = mapper.toEntity(user);
+        UserEntity entity = springDataUserRepository
+                .findById(user.getId())
+                .orElse(mapper.toEntity(user));
+
+        entity.setName(user.getName());
+        entity.setEmail(user.getEmail());
+        entity.setPassword(user.getPassword());
+        entity.setTelegramId(user.getTelegramId());
 
         UserEntity savedEntity = springDataUserRepository.save(entity);
 

@@ -52,5 +52,4 @@ public class WalletTransactionController {
 
         return ResponseEntity.ok(response);
     }
-
 }

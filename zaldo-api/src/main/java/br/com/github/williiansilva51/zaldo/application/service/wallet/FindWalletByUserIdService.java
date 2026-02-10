@@ -8,9 +8,11 @@ import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByUser
 import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 class FindWalletByUserIdService implements FindWalletByUserIdUseCase {
     private final WalletRepositoryPort walletRepositoryPort;
 

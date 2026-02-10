@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MenuUtils {
     public static InlineKeyboardMarkup createMainKeyboard() {
-        InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", "BTN_LIST_WALLETS");
+        InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", "BTN_LIST_WALLETS:0");
         InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", "BTN_LOGIN");
 
         InlineKeyboardRow row1 = new InlineKeyboardRow(btnWallets);
@@ -29,7 +29,7 @@ public class MenuUtils {
         InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_TRANSACTION:INCOME");
         InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
         InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", "BTN_CONFIRM_DELETE_WALLET");
-        InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS");
+        InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS:0");
 
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(new InlineKeyboardRow(btnExpense, btnIncome))
@@ -54,13 +54,13 @@ public class MenuUtils {
 
         if (wallets.hasPrevious()) {
             rows.add(new InlineKeyboardRow(
-                    createButton("⬅\uFE0F Anterior", "WALLETS_PAGE:" + (wallets.currentPage() - 1))
+                    createButton("⬅\uFE0F Anterior", "BTN_LIST_WALLETS:" + (wallets.currentPage() - 1))
             ));
         }
 
         if (wallets.hasNext()) {
             rows.add(new InlineKeyboardRow(
-                    createButton("➡\uFE0F Próxima", "WALLETS_PAGE:" + (wallets.currentPage() + 1))
+                    createButton("➡\uFE0F Próxima", "BTN_LIST_WALLETS:" + (wallets.currentPage() + 1))
             ));
         }
 

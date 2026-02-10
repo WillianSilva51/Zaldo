@@ -10,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UpdateUserService implements UpdateUserUseCase {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
-    @Transactional
     public User execute(String id, User user) {
         User existingUser = userRepositoryPort.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado para atualização: " + id));

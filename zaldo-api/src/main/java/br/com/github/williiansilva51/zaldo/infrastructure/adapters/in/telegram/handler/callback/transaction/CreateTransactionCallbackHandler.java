@@ -32,7 +32,14 @@ public class CreateTransactionCallbackHandler implements TelegramCallbackHandler
         String data = callbackQuery.getData();
 
         String type = data.split(":")[1];
-        TransactionType transactionType = TransactionType.valueOf(type);
+        TransactionType transactionType;
+
+        try {
+            transactionType = TransactionType.valueOf(type);
+        } catch (IllegalArgumentException ex) {
+            return MenuUtils.createErrorMessage(chatId, messageId, "Tipo de transação inválido. Tente novamente.");
+        }
+
 
         FlowContext context = sessionManager.get(chatId);
         context.setChatState(ChatState.WAITING_TRANSACTION_DESCRIPTION);
