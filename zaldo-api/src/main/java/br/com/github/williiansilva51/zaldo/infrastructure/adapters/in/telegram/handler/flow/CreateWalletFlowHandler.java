@@ -3,7 +3,6 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.service.UserCacheService;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
@@ -24,7 +23,6 @@ import java.util.Set;
 public class CreateWalletFlowHandler implements FlowHandler {
     private final UserSessionManager sessionManager;
     private final CreateWalletUseCase createWalletUseCase;
-    private final UserCacheService userCacheService;
     private final Validator validator;
 
     @Override
@@ -39,7 +37,7 @@ public class CreateWalletFlowHandler implements FlowHandler {
         if (context.getChatState().equals(ChatState.WAITING_WALLET_NAME)) {
             return processWalletNameInput(chatId, text, context);
         } else if (context.getChatState().equals(ChatState.WAITING_WALLET_DESCRIPTION)) {
-            return processWalletDescriptionInput(chatId, text, context, userId);
+            return processWalletDescriptionInput(chatId, text, context);
         }
 
         return null;
@@ -73,7 +71,7 @@ public class CreateWalletFlowHandler implements FlowHandler {
                 .build();
     }
 
-    private SendMessage processWalletDescriptionInput(Long chatId, String text, FlowContext context, String userId) {
+    private SendMessage processWalletDescriptionInput(Long chatId, String text, FlowContext context) {
         User user = context.getAuthenticatedUser();
 
         Wallet wallet = Wallet.builder()

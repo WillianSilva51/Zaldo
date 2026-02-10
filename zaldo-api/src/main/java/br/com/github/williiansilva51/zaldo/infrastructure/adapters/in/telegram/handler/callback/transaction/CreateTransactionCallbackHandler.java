@@ -47,12 +47,18 @@ public class CreateTransactionCallbackHandler implements TelegramCallbackHandler
         sessionManager.save(chatId, context);
 
         String text = transactionType == TransactionType.EXPENSE
-                ? "\uD83D\uDCB8 <b>Nova despesa</b>\n\n" +
-                "Digite a descrição da despesa.\n\n" +
-                "<i>Exemplo:</i> Mercado, Aluguel, Uber"
-                : "\uD83D\uDCB0 <b>Nova receita</b>\n\n" +
-                "Digite a descrição da receita.\n\n" +
-                "<i>Exemplo:</i> Salário, Freelance, Reembolso";
+                ? """
+                \uD83D\uDCB8 <b>Nova despesa</b>
+                
+                Digite a descrição da despesa.
+                
+                <i>Exemplo:</i> Mercado, Aluguel, Uber"""
+                : """
+                \uD83D\uDCB0 <b>Nova receita</b>
+                
+                Digite a descrição da receita.
+                
+                <i>Exemplo:</i> Salário, Freelance, Reembolso""";
 
 
         return EditMessageText.builder()

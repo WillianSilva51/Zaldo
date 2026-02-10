@@ -2,7 +2,6 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.UpdateUserUseCase;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.service.UserCacheService;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
@@ -22,7 +21,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class LoginFlowHandler implements FlowHandler {
     private final UserSessionManager sessionManager;
-    private final UserCacheService userCacheService;
     private final UpdateUserUseCase updateUserUseCase;
     private final Validator validator;
 
@@ -70,18 +68,14 @@ public class LoginFlowHandler implements FlowHandler {
     }
 
     private SendMessage processPasswordInput(Long chatId, String text, FlowContext context, String userId) {
-        User user = context.getAuthenticatedUser();
-
         String email = context.getTempEmail();
 
         // TODO: Encriptar aqui (BCrypt)
 
-        user.update(User.builder()
+        updateUserUseCase.execute(userId, User.builder()
                 .email(email)
                 .password(text)
                 .build());
-
-        updateUserUseCase.execute(user.getId(), user);
 
         sessionManager.clearSession(chatId);
 
