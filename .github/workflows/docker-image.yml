@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -33,6 +31,5 @@ jobs:
           file: ./zaldo-api/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/zaldo:latest
-            ${{ secrets.DOCKER_USERNAME }}/zaldo:${{ github.sha }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/zaldo:latest
+          #  ${{ secrets.DOCKER_USERNAME }}/zaldo:${{ github.sha }}
