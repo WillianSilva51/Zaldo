@@ -5,6 +5,7 @@ import br.com.github.williiansilva51.zaldo.core.exceptions.DomainValidationExcep
 import br.com.github.williiansilva51.zaldo.core.ports.in.user.CreateUserUseCase;
 import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CreateUserService implements CreateUserUseCase {
     private final UserRepositoryPort userRepositoryPort;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User execute(User user) {
@@ -20,7 +22,11 @@ public class CreateUserService implements CreateUserUseCase {
             throw new DomainValidationException("Já existe um usuário com este e-mail.");
         }
 
-        // TODO: Futuramente aqui entra o Hash da Senha (BCrypt)
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+
+        user.update(User.builder()
+                .password(encodedPassword)
+                .build());
 
         return userRepositoryPort.save(user);
     }

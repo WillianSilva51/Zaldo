@@ -70,8 +70,6 @@ public class LoginFlowHandler implements FlowHandler {
     private SendMessage processPasswordInput(Long chatId, String text, FlowContext context, String userId) {
         String email = context.getTempEmail();
 
-        // TODO: Encriptar aqui (BCrypt)
-
         updateUserUseCase.execute(userId, User.builder()
                 .email(email)
                 .password(text)

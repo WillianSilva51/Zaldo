@@ -39,7 +39,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
       - POSTGRES_URL=jdbc:postgresql://postgres:5432/${DB_NAME:-zaldo}
       - POSTGRES_USER=${DB_USER:-admin}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-admin}

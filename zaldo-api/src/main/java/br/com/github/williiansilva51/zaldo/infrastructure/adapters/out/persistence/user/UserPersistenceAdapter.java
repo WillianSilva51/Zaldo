@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.user;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.UserEntity;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.mapper.UserPersistenceMapper;
@@ -18,9 +19,15 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
 
     @Override
     public User save(User user) {
-        UserEntity entity = springDataUserRepository
-                .findById(user.getId())
-                .orElse(mapper.toEntity(user));
+        UserEntity entity;
+
+        if (user.getId() != null) {
+            entity = springDataUserRepository
+                    .findById(user.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        } else {
+            entity = mapper.toEntity(user);
+        }
 
         entity.setName(user.getName());
         entity.setEmail(user.getEmail());
