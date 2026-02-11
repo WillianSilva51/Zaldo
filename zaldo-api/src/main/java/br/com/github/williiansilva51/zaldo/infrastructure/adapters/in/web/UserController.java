@@ -55,6 +55,7 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "Finds a user by id", description = "Returns the user found")
     @ApiResponse(responseCode = "200", description = "User found successfully")
+    @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<UserResponse> getUserById(@PathVariable String id) {
         User user = findUserByIdService.execute(id);
 
