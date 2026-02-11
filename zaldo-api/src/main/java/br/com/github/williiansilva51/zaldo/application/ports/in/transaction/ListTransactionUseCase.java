@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.core.ports.in.transaction;
+package br.com.github.williiansilva51.zaldo.application.ports.in.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;

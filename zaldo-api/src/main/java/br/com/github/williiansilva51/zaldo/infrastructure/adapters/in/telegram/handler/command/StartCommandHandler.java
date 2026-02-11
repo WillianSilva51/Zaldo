@@ -1,8 +1,8 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.command;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.user.CreateUserUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.in.user.FindUserByTelegramIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
-import br.com.github.williiansilva51.zaldo.core.ports.in.user.CreateUserUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.user.FindUserByTelegramIdUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

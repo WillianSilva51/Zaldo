@@ -1,8 +1,8 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.user;
 
+import br.com.github.williiansilva51.zaldo.application.ports.out.UserRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
-import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.UserEntity;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.mapper.UserPersistenceMapper;
 import lombok.RequiredArgsConstructor;

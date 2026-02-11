@@ -1,10 +1,10 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.wallet;
 
+import br.com.github.williiansilva51.zaldo.application.ports.out.WalletRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.sort.WalletSortField;
-import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.WalletEntity;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.mapper.WalletPersistenceMapper;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.utils.PageUtils;

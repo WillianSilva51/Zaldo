@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.core.ports.in.wallet;
+package br.com.github.williiansilva51.zaldo.application.ports.in.wallet;
 
 import java.math.BigDecimal;
 

@@ -1,11 +1,11 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.transaction;
 
+import br.com.github.williiansilva51.zaldo.application.ports.out.TransactionRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.core.enums.sort.TransactionSortField;
-import br.com.github.williiansilva51.zaldo.core.ports.out.TransactionRepositoryPort;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.TransactionEntity;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.mapper.TransactionPersistenceMapper;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.utils.PageUtils;

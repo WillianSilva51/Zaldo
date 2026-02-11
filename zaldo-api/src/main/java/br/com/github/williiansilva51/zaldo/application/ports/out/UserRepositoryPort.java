@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.core.ports.out;
+package br.com.github.williiansilva51.zaldo.application.ports.out;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 

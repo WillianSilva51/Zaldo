@@ -1,9 +1,9 @@
 package br.com.github.williiansilva51.zaldo.application.service.user;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.user.UpdateUserUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.out.UserRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
-import br.com.github.williiansilva51.zaldo.core.ports.in.user.UpdateUserUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
