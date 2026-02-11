@@ -1,9 +1,9 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.wallet;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.FindWalletByIdUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.GetBalanceByWalletAndUserUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByIdUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.GetBalanceByWalletAndUserUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;

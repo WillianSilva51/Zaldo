@@ -1,10 +1,10 @@
 package br.com.github.williiansilva51.zaldo.application.service.wallet;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.DeleteWalletByIdUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.FindWalletByIdUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.out.WalletRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.exceptions.DomainValidationException;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.DeleteWalletByIdUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByIdUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.out.WalletRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,10 +1,11 @@
 package br.com.github.williiansilva51.zaldo.application.service.user;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.user.UpdateUserUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.out.UserRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
-import br.com.github.williiansilva51.zaldo.core.ports.in.user.UpdateUserUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.out.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UpdateUserService implements UpdateUserUseCase {
     private final UserRepositoryPort userRepositoryPort;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User execute(String id, User user) {
@@ -23,12 +25,17 @@ public class UpdateUserService implements UpdateUserUseCase {
         if (newEmail != null && !newEmail.equals(existingUser.getEmail())) {
             userRepositoryPort.findByEmail(newEmail)
                     .filter(foundUser -> !foundUser.getId().equals(id))
-                    .ifPresent(foundUser -> {
+                    .ifPresent(_ -> {
                         throw new IllegalArgumentException("Email já está em uso: " + newEmail);
                     });
         }
 
-        // TODO: Futuramente aqui entra o Hash da Senha (BCrypt)
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.update(User.builder()
+                    .password(encodedPassword)
+                    .build());
+        }
 
         existingUser.update(user);
 

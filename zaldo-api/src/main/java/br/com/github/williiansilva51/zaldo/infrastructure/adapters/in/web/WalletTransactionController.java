@@ -1,10 +1,10 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.transaction.FindTransactionByWalletIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.sort.TransactionSortField;
-import br.com.github.williiansilva51.zaldo.core.ports.in.transaction.FindTransactionByWalletIdUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.PaginatedResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.TransactionResponse;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.mapper.TransactionMapper;

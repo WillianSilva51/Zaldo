@@ -1,10 +1,10 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.CreateWalletUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.DeleteWalletByIdUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.FindWalletByIdUseCase;
+import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.UpdateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.CreateWalletUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.DeleteWalletByIdUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.FindWalletByIdUseCase;
-import br.com.github.williiansilva51.zaldo.core.ports.in.wallet.UpdateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.CreateWalletRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.request.wallet.UpdateWalletRequest;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.WalletResponse;
