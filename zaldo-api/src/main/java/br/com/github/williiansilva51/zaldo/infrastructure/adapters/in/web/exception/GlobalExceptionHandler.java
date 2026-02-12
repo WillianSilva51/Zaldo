@@ -1,5 +1,6 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.exception;
 
+import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException;
 import br.com.github.williiansilva51.zaldo.core.exceptions.DomainValidationException;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.ErrorResponse;
@@ -49,6 +50,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DomainValidationException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(DomainValidationException ex, HttpServletRequest request) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(BusinessRuleException ex, HttpServletRequest request) {
         return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 

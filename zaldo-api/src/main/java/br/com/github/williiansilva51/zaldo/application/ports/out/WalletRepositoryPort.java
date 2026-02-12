@@ -18,4 +18,6 @@ public interface WalletRepositoryPort {
     void deleteById(Long id);
 
     BigDecimal getTotalBalanceByWalletAndUser(Long walletId, String userId);
+
+    long countByUserId(String userId);
 }

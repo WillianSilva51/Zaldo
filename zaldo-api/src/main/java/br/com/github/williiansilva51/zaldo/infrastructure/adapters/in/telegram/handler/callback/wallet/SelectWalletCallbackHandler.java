@@ -47,11 +47,17 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
         context.setTempWalletName(wallet.getName());
         sessionManager.save(chatId, context);
 
+        String description = wallet.getDescription() == null ? "Sem descrição" : wallet.getDescription();
         BigDecimal balance = getBalanceByWalletAndUserUseCase.execute(context.getTempWalletId(), user.getId());
 
         String text = String.format(
-                "🏦 <b>Carteira: %s</b>\n💰 Saldo: R$ %.2f\n\nO que deseja fazer?",
-                wallet.getName(), balance
+                """
+                        🏦 <b>Carteira: %s</b>
+                        📄 Descrição: %s
+                        💰 Saldo: R$ %.2f
+                        
+                        O que deseja fazer?""",
+                wallet.getName(), description, balance
         );
 
         return EditMessageText.builder()

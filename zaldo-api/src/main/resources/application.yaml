@@ -2,6 +2,10 @@ spring:
   application:
     name: zaldo-api
 
+  threads:
+    virtual:
+      enabled: true
+
   # Configuração de Banco de Dados
   datasource:
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/zaldo}
@@ -39,3 +43,7 @@ api:
       # Defina um segredo padrão longo para dev, sobrescreva em prod
       secret: ${TOKEN_JWT:345345fsdf345345sdfsdf345345sdfsdfgsdfg345345}
       bot: ${TOKEN_TELEGRAM_BOT}
+
+zaldo:
+  wallet:
+    limit: 10
