@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -12,8 +13,8 @@ import java.util.List;
 
 public class MenuUtils {
     public static InlineKeyboardMarkup createMainKeyboard() {
-        InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", "BTN_LIST_WALLETS:0");
-        InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", "BTN_LOGIN");
+        InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", BotAction.LIST_WALLETS.build(0));
+        InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", BotAction.LOGIN.getActionName());
 
         InlineKeyboardRow row1 = new InlineKeyboardRow(btnWallets);
         InlineKeyboardRow row2 = new InlineKeyboardRow(btnWeb);
@@ -25,11 +26,11 @@ public class MenuUtils {
     }
 
     public static InlineKeyboardMarkup createWalletsKeyboard() {
-        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_TRANSACTION:EXPENSE");
-        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_TRANSACTION:INCOME");
-        InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
-        InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", "BTN_CONFIRM_DELETE_WALLET");
-        InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS:0");
+        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", BotAction.NEW_TRANSACTION.build("EXPENSE"));
+        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", BotAction.NEW_TRANSACTION.build("INCOME"));
+        InlineKeyboardButton btnStatement = createButton("📊 Extrato", BotAction.STATEMENT.getActionName());
+        InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", BotAction.CONFIRM_DELETE_WALLET.getActionName());
+        InlineKeyboardButton btnReturn = createBackButton(BotAction.LIST_WALLETS.build(0));
 
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(new InlineKeyboardRow(btnExpense, btnIncome))
@@ -45,7 +46,7 @@ public class MenuUtils {
         List<Wallet> walletsList = wallets.content();
 
         for (Wallet wallet : walletsList) {
-            String callbackData = "SEL_WALLET:" + wallet.getId();
+            String callbackData = BotAction.SELECT_WALLET.build(wallet.getId());
 
             InlineKeyboardButton button = createButton("\uD83D\uDCB3 " + wallet.getName(), callbackData);
 
@@ -54,19 +55,19 @@ public class MenuUtils {
 
         if (wallets.hasPrevious()) {
             rows.add(new InlineKeyboardRow(
-                    createButton("⬅\uFE0F Anterior", "BTN_LIST_WALLETS:" + (wallets.currentPage() - 1))
+                    createButton("⬅\uFE0F Anterior", BotAction.LIST_WALLETS.build(wallets.currentPage() - 1))
             ));
         }
 
         if (wallets.hasNext()) {
             rows.add(new InlineKeyboardRow(
-                    createButton("➡\uFE0F Próxima", "BTN_LIST_WALLETS:" + (wallets.currentPage() + 1))
+                    createButton("➡\uFE0F Próxima", BotAction.LIST_WALLETS.build(wallets.currentPage() + 1))
             ));
         }
 
 
-        rows.add(new InlineKeyboardRow(createButton("➕ Nova Carteira", "BTN_CREATE_WALLET")));
-        rows.add(new InlineKeyboardRow(createBackButton("BTN_MAIN_MENU")));
+        rows.add(new InlineKeyboardRow(createButton("➕ Nova Carteira", BotAction.CREATE_WALLET.getActionName())));
+        rows.add(new InlineKeyboardRow(createBackButton(BotAction.MAIN_MENU.getActionName())));
 
         return InlineKeyboardMarkup.builder().keyboard(rows).build();
     }

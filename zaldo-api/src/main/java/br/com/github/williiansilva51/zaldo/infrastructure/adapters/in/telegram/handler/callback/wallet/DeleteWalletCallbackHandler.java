@@ -2,6 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.DeleteWalletByIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
@@ -24,7 +25,7 @@ public class DeleteWalletCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "BTN_DELETE_WALLET";
+        return BotAction.DELETE_WALLET.getActionName();
     }
 
     @Override
@@ -41,7 +42,7 @@ public class DeleteWalletCallbackHandler implements TelegramCallbackHandler {
                     .messageId(messageId)
                     .text("⚠\uFE0F Erro: Não foi possível identificar a carteira. Tente listar novamente.")
                     .replyMarkup(InlineKeyboardMarkup.builder()
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0")))
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0))))
                             .build())
                     .build();
         }
@@ -55,7 +56,7 @@ public class DeleteWalletCallbackHandler implements TelegramCallbackHandler {
                     .messageId(messageId)
                     .text(("✅ <b>Carteira apagada com sucesso!</b>\n\nTodas as transações vinculadas também foram removidas."))
                     .replyMarkup(InlineKeyboardMarkup.builder()
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0"))).build())
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0)))).build())
                     .parseMode("HTML")
                     .build();
         } catch (Exception e) {
@@ -66,7 +67,7 @@ public class DeleteWalletCallbackHandler implements TelegramCallbackHandler {
                     .messageId(messageId)
                     .text("❌ Ocorreu um erro ao tentar apagar a carteira.")
                     .replyMarkup(InlineKeyboardMarkup.builder()
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0")))
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0))))
                             .build())
                     .build();
         }

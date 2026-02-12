@@ -3,7 +3,8 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.application.ports.in.transaction.CreateTransactionUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -65,7 +66,7 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                 .text("📧 Descrição salva! Agora digite o valor da <b>transação</b>: \n" +
                         "(Exemplo: 100.00 ou 100,00)")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + context.getTempWalletId())))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(context.getTempWalletId()))))
                         .build())
                 .parseMode("HTML")
                 .build();
@@ -95,7 +96,7 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                     .chatId(chatId)
                     .text("❌ Valor inválido. Digite um número válido, exemplo: 10.50 ou 10,50")
                     .replyMarkup(InlineKeyboardMarkup.builder()
-                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + context.getTempWalletId())))
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(context.getTempWalletId()))))
                             .build())
                     .build();
         }
@@ -116,8 +117,8 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                 .chatId(chatId)
                 .text("📧 Valor salvo! Agora digite a data da <b>transação</b>(YYYY/MM/DD ou YYYY-MM-DD) (Opcional):")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + context.getTempWalletId())))
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular data", "BTN_SKIP_DATE")))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(context.getTempWalletId()))))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular data", BotAction.SKIP_DATE_TRANSACTION.getActionName())))
                         .build())
                 .parseMode("HTML")
                 .build();
@@ -134,8 +135,8 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                         .chatId(chatId)
                         .text("❌ Data inválida. Digite uma data válida, exemplo: 2025/05/10 ou 2025-05-10")
                         .replyMarkup(InlineKeyboardMarkup.builder()
-                                .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + context.getTempWalletId())))
-                                .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular data", "BTN_SKIP_DATE")))
+                                .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(context.getTempWalletId()))))
+                                .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular data", BotAction.SKIP_DATE_TRANSACTION.getActionName())))
                                 .build())
                         .build();
             }
@@ -160,7 +161,7 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                 .text("✅ <b>Sucesso!</b> Transação criada.\n\nO que deseja fazer agora?")
                 .parseMode("HTML")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + walletId))).build())
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(walletId)))).build())
                 .build();
     }
 }

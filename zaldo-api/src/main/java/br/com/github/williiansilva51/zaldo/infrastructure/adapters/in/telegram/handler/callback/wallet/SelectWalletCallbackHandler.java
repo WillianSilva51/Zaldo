@@ -4,8 +4,9 @@ import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.FindWalle
 import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.GetBalanceByWalletAndUserUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -26,7 +27,7 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "SEL_WALLET";
+        return BotAction.SELECT_WALLET.getActionName();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
         String data = callbackQuery.getData();
 
-        String walletIdStr = data.split(":")[1];
+        String walletIdStr = BotAction.extractArg(data);
         Long walletId = Long.parseLong(walletIdStr);
 
         Wallet wallet = findWalletByIdUseCase.execute(walletId);

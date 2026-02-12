@@ -2,8 +2,9 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -22,7 +23,7 @@ public class CreateTransactionCallbackHandler implements TelegramCallbackHandler
 
     @Override
     public String getActionName() {
-        return "BTN_NEW_TRANSACTION";
+        return BotAction.NEW_TRANSACTION.getActionName();
     }
 
     @Override
@@ -31,7 +32,7 @@ public class CreateTransactionCallbackHandler implements TelegramCallbackHandler
         Integer messageId = callbackQuery.getMessage().getMessageId();
         String data = callbackQuery.getData();
 
-        String type = data.split(":")[1];
+        String type = BotAction.extractArg(data);
         TransactionType transactionType;
 
         try {
@@ -73,7 +74,7 @@ public class CreateTransactionCallbackHandler implements TelegramCallbackHandler
                 .messageId(messageId)
                 .text(text)
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("SEL_WALLET:" + walletId)))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(walletId))))
                         .build())
                 .parseMode("HTML")
                 .build();

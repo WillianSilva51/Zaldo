@@ -1,8 +1,9 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.wallet;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class CreateWalletCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "BTN_CREATE_WALLET";
+        return BotAction.CREATE_WALLET.getActionName();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class CreateWalletCallbackHandler implements TelegramCallbackHandler {
                 .chatId(chatId)
                 .text("Digite o nome da sua carteira:")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0")))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0))))
                         .build())
                 .build();
     }

@@ -1,7 +1,8 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -18,7 +19,7 @@ public class MainMenuCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "BTN_MAIN_MENU";
+        return BotAction.MAIN_MENU.getActionName();
     }
 
     @Override

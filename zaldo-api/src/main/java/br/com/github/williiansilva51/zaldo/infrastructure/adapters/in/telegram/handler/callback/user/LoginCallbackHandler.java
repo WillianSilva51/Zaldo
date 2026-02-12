@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.user;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.command.LoginCommandHandler;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class LoginCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "BTN_LOGIN";
+        return BotAction.LOGIN.getActionName();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state;
 
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;

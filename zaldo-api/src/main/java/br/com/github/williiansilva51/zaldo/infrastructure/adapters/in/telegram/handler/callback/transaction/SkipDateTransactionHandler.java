@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.transaction;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.CreateTransactionFlowHandler;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class SkipDateTransactionHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "BTN_SKIP_DATE";
+        return BotAction.SKIP_DATE_TRANSACTION.getActionName();
     }
 
     @Override

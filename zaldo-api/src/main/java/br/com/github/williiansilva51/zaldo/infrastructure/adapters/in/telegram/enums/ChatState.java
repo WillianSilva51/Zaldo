@@ -1,4 +1,4 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums;
 
 public enum ChatState {
     IDLE, //Livre
