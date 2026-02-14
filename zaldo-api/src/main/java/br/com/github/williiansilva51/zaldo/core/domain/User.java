@@ -28,7 +28,7 @@ public class User implements Serializable {
         }
 
         if (newInfo.getEmail() != null && !newInfo.getEmail().isBlank()) {
-            email = newInfo.getEmail();
+            email = newInfo.getEmail().toLowerCase();
         }
 
         if (newInfo.getPassword() != null && !newInfo.getPassword().isBlank()) {
