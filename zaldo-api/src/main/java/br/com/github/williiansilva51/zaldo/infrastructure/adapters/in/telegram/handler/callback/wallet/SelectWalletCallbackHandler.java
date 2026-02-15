@@ -4,8 +4,9 @@ import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.FindWalle
 import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.GetBalanceByWalletAndUserUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -26,7 +27,7 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "SEL_WALLET";
+        return BotAction.SELECT_WALLET.getActionName();
     }
 
     @Override
@@ -35,8 +36,15 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
         String data = callbackQuery.getData();
 
-        String walletIdStr = data.split(":")[1];
-        Long walletId = Long.parseLong(walletIdStr);
+        String walletIdStr = BotAction.extractArg(data);
+
+        Long walletId;
+
+        try {
+            walletId = Long.parseLong(walletIdStr);
+        } catch (NumberFormatException ex) {
+            return MenuUtils.createErrorMessage(chatId, messageId, "Algo deu errado. Tente novamente.");
+        }
 
         Wallet wallet = findWalletByIdUseCase.execute(walletId);
 
@@ -47,11 +55,17 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
         context.setTempWalletName(wallet.getName());
         sessionManager.save(chatId, context);
 
+        String description = wallet.getDescription() == null ? "Sem descrição" : wallet.getDescription();
         BigDecimal balance = getBalanceByWalletAndUserUseCase.execute(context.getTempWalletId(), user.getId());
 
         String text = String.format(
-                "🏦 <b>Carteira: %s</b>\n💰 Saldo: R$ %.2f\n\nO que deseja fazer?",
-                wallet.getName(), balance
+                """
+                        🏦 <b>Carteira: %s</b>
+                        📄 Descrição: %s
+                        💰 Saldo: R$ %.2f
+                        
+                        O que deseja fazer?""",
+                wallet.getName(), description, balance
         );
 
         return EditMessageText.builder()

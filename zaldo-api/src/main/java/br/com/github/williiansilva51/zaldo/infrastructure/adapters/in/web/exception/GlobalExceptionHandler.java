@@ -1,5 +1,6 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.exception;
 
+import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException;
 import br.com.github.williiansilva51.zaldo.core.exceptions.DomainValidationException;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.web.dto.response.ErrorResponse;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.TypeMismatchException;
 import org.jspecify.annotations.NonNull;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -52,6 +54,11 @@ public class GlobalExceptionHandler {
         return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(BusinessRuleException ex, HttpServletRequest request) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException ex, HttpServletRequest request) {
         return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
@@ -81,6 +88,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(DataIntegrityViolationException ex, HttpServletRequest request) {
         return generateErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 

@@ -3,7 +3,9 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.application.ports.in.wallet.CreateWalletUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
+import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -65,8 +67,8 @@ public class CreateWalletFlowHandler implements FlowHandler {
                 .chatId(chatId)
                 .text("📧 Nome salvo! Agora digite a descrição da <b>carteira</b> (Opcional):")
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_CREATE_WALLET")))
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular descrição", "BTN_SKIP_DESCRIPTION"))).build())
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.CREATE_WALLET.getActionName())))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular descrição", BotAction.SKIP_DESCRIPTION_WALLET.getActionName()))).build())
                 .parseMode("HTML")
                 .build();
     }
@@ -80,16 +82,32 @@ public class CreateWalletFlowHandler implements FlowHandler {
                 .user(user)
                 .build();
 
-        createWalletUseCase.execute(wallet);
+        try {
+            createWalletUseCase.execute(wallet);
 
-        sessionManager.clearSession(chatId);
+            sessionManager.clearSession(chatId);
 
-        return SendMessage.builder()
-                .chatId(chatId)
-                .text("✅ <b>Sucesso!</b> Carteira criada.\n\nO que deseja fazer agora?")
-                .parseMode("HTML")
-                .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LIST_WALLETS:0"))).build())
-                .build();
+            return SendMessage.builder()
+                    .chatId(chatId)
+                    .text("✅ <b>Sucesso!</b> Carteira criada.\n\nO que deseja fazer agora?")
+                    .parseMode("HTML")
+                    .replyMarkup(InlineKeyboardMarkup.builder()
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0)))).build())
+                    .build();
+
+        } catch (BusinessRuleException e) {
+            context.setChatState(ChatState.IDLE);
+
+            sessionManager.save(chatId, context);
+
+            return SendMessage.builder()
+                    .chatId(chatId)
+                    .text("Erro ao criar carteira: " + e.getMessage() + ".")
+                    .parseMode("HTML")
+                    .replyMarkup(InlineKeyboardMarkup.builder()
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0)))).build())
+                    .build();
+        }
+
     }
 }

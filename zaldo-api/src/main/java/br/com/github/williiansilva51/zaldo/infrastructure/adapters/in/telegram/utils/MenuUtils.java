@@ -1,7 +1,10 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils;
 
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
+import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -12,8 +15,8 @@ import java.util.List;
 
 public class MenuUtils {
     public static InlineKeyboardMarkup createMainKeyboard() {
-        InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", "BTN_LIST_WALLETS:0");
-        InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", "BTN_LOGIN");
+        InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", BotAction.LIST_WALLETS.build(0));
+        InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", BotAction.LOGIN.getActionName());
 
         InlineKeyboardRow row1 = new InlineKeyboardRow(btnWallets);
         InlineKeyboardRow row2 = new InlineKeyboardRow(btnWeb);
@@ -25,11 +28,11 @@ public class MenuUtils {
     }
 
     public static InlineKeyboardMarkup createWalletsKeyboard() {
-        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", "BTN_NEW_TRANSACTION:EXPENSE");
-        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", "BTN_NEW_TRANSACTION:INCOME");
-        InlineKeyboardButton btnStatement = createButton("📊 Extrato", "BTN_STATEMENT");
-        InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", "BTN_CONFIRM_DELETE_WALLET");
-        InlineKeyboardButton btnReturn = createBackButton("BTN_LIST_WALLETS:0");
+        InlineKeyboardButton btnExpense = createButton("📉 Nova Despesa", BotAction.NEW_TRANSACTION.build("EXPENSE"));
+        InlineKeyboardButton btnIncome = createButton("📈 Nova Receita", BotAction.NEW_TRANSACTION.build("INCOME"));
+        InlineKeyboardButton btnStatement = createButton("📊 Extrato", BotAction.LIST_TRANSACTIONS.build(0));
+        InlineKeyboardButton btnDeleteWallet = createButton("❌ Deletar Carteira", BotAction.CONFIRM_DELETE_WALLET.getActionName());
+        InlineKeyboardButton btnReturn = createBackButton(BotAction.LIST_WALLETS.build(0));
 
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(new InlineKeyboardRow(btnExpense, btnIncome))
@@ -38,6 +41,16 @@ public class MenuUtils {
                 .build();
     }
 
+    public static InlineKeyboardMarkup createTransactionsKeyboard() {
+        InlineKeyboardButton btnUpdateTransaction = createButton("✏\uFE0F Editar Transação", BotAction.EDIT_TRANSACTION.getActionName());
+        InlineKeyboardButton btnDeleteTransaction = createButton("❌ Deletar Transação", BotAction.CONFIRM_DELETE_TRANSACTION.getActionName());
+        InlineKeyboardButton btnReturn = createBackButton(BotAction.LIST_TRANSACTIONS.build(0));
+
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(btnUpdateTransaction, btnDeleteTransaction))
+                .keyboardRow(new InlineKeyboardRow(btnReturn))
+                .build();
+    }
 
     public static InlineKeyboardMarkup createListWallets(Paginated<Wallet> wallets) {
         List<InlineKeyboardRow> rows = new ArrayList<>();
@@ -45,7 +58,7 @@ public class MenuUtils {
         List<Wallet> walletsList = wallets.content();
 
         for (Wallet wallet : walletsList) {
-            String callbackData = "SEL_WALLET:" + wallet.getId();
+            String callbackData = BotAction.SELECT_WALLET.build(wallet.getId());
 
             InlineKeyboardButton button = createButton("\uD83D\uDCB3 " + wallet.getName(), callbackData);
 
@@ -54,19 +67,60 @@ public class MenuUtils {
 
         if (wallets.hasPrevious()) {
             rows.add(new InlineKeyboardRow(
-                    createButton("⬅\uFE0F Anterior", "BTN_LIST_WALLETS:" + (wallets.currentPage() - 1))
+                    createButton("⬅\uFE0F Anterior", BotAction.LIST_WALLETS.build(wallets.currentPage() - 1))
             ));
         }
 
         if (wallets.hasNext()) {
             rows.add(new InlineKeyboardRow(
-                    createButton("➡\uFE0F Próxima", "BTN_LIST_WALLETS:" + (wallets.currentPage() + 1))
+                    createButton("➡\uFE0F Próxima", BotAction.LIST_WALLETS.build(wallets.currentPage() + 1))
             ));
         }
 
 
-        rows.add(new InlineKeyboardRow(createButton("➕ Nova Carteira", "BTN_CREATE_WALLET")));
-        rows.add(new InlineKeyboardRow(createBackButton("BTN_MAIN_MENU")));
+        rows.add(new InlineKeyboardRow(createButton("➕ Nova Carteira", BotAction.CREATE_WALLET.getActionName())));
+        rows.add(new InlineKeyboardRow(createBackButton(BotAction.MAIN_MENU.getActionName())));
+
+        return InlineKeyboardMarkup.builder().keyboard(rows).build();
+    }
+
+    public static InlineKeyboardMarkup createListTransactions(Paginated<Transaction> transactions) {
+        List<InlineKeyboardRow> rows = new ArrayList<>();
+
+        List<Transaction> transactionsList = transactions.content();
+
+        for (Transaction transaction : transactionsList) {
+            String callbackData = BotAction.SELECT_TRANSACTION.build(transaction.getId());
+
+            String emoji = transaction.getType() == TransactionType.INCOME ? "\uD83D\uDFE2" : "\uD83D\uDD34";
+
+            String text = String.format("%s %s - R$ %s",
+                    emoji, transaction.getDescription(), transaction.getAmount());
+
+            InlineKeyboardButton button = createButton(text, callbackData);
+
+            rows.add(new InlineKeyboardRow(button));
+        }
+
+
+        if (transactions.hasPrevious()) {
+            rows.add(new InlineKeyboardRow(
+                    createButton("⬅\uFE0F Anterior", BotAction.LIST_TRANSACTIONS.build(transactions.currentPage() - 1))
+            ));
+        }
+
+        if (transactions.hasNext()) {
+            rows.add(new InlineKeyboardRow(
+                    createButton("➡\uFE0F Próxima", BotAction.LIST_TRANSACTIONS.build(transactions.currentPage() + 1))
+            ));
+        }
+
+        if (!transactionsList.isEmpty()) {
+            rows.add(new InlineKeyboardRow(createBackButton(BotAction.SELECT_WALLET.build(transactionsList
+                    .getFirst()
+                    .getWallet()
+                    .getId()))));
+        }
 
         return InlineKeyboardMarkup.builder().keyboard(rows).build();
     }

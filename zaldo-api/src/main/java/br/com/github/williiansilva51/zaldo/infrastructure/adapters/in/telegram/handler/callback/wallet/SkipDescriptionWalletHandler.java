@@ -1,6 +1,7 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.wallet;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.flow.CreateWalletFlowHandler;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class SkipDescriptionWalletHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "BTN_SKIP_DESCRIPTION";
+        return BotAction.SKIP_DESCRIPTION_WALLET.getActionName();
     }
 
     @Override

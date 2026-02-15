@@ -2,7 +2,8 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.application.ports.in.user.UpdateUserUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -62,7 +63,7 @@ public class LoginFlowHandler implements FlowHandler {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text("📧 E-mail salvo! Agora digite sua <b>senha</b>:")
-                .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton("BTN_LOGIN"))).build())
+                .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LOGIN.getActionName()))).build())
                 .parseMode("HTML")
                 .build();
     }

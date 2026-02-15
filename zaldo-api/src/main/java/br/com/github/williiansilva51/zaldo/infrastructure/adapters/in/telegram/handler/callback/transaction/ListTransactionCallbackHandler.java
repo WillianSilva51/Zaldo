@@ -1,7 +1,11 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.transaction;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.transaction.FindTransactionByWalletIdUseCase;
+import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
+import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
-import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
+import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
+import br.com.github.williiansilva51.zaldo.core.enums.sort.TransactionSortField;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
@@ -18,12 +22,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 @Component
 @RequiredArgsConstructor
-public class CreateTransactionCallbackHandler implements TelegramCallbackHandler {
+public class ListTransactionCallbackHandler implements TelegramCallbackHandler {
     private final UserSessionManager sessionManager;
+    private final FindTransactionByWalletIdUseCase findTransactionByWalletIdUseCase;
 
     @Override
     public String getActionName() {
-        return BotAction.NEW_TRANSACTION.getActionName();
+        return BotAction.LIST_TRANSACTIONS.getActionName();
     }
 
     @Override
@@ -32,51 +37,42 @@ public class CreateTransactionCallbackHandler implements TelegramCallbackHandler
         Integer messageId = callbackQuery.getMessage().getMessageId();
         String data = callbackQuery.getData();
 
-        String type = BotAction.extractArg(data);
-        TransactionType transactionType;
+        String actionPage = BotAction.extractArg(data);
 
+        sessionManager.setChatState(chatId, ChatState.IDLE);
+
+        int page;
         try {
-            transactionType = TransactionType.valueOf(type);
-        } catch (IllegalArgumentException ex) {
-            return MenuUtils.createErrorMessage(chatId, messageId, "Tipo de transação inválido. Tente novamente.");
+            page = Integer.parseInt(actionPage);
+        } catch (NumberFormatException e) {
+            return MenuUtils.createErrorMessage(chatId, messageId, "Algo deu errado. Tente novamente.");
         }
-
 
         FlowContext context = sessionManager.get(chatId);
-        context.setChatState(ChatState.WAITING_TRANSACTION_DESCRIPTION);
-        context.setTempTransactionType(transactionType);
-
         Long walletId = context.getTempWalletId();
 
-        if (walletId == null) {
-            return MenuUtils.createErrorMessage(chatId, messageId, "Selecione uma carteira primeiro.");
+        Paginated<Transaction> transactionPaginated = findTransactionByWalletIdUseCase
+                .execute(context.getTempWalletId(), page, 10, TransactionSortField.description, DirectionOrder.DESC);
+
+        if (transactionPaginated.totalElements() == 0) {
+            return EditMessageText.builder()
+                    .chatId(chatId)
+                    .messageId(messageId).text("\uD83D\uDCED <b>Extrato da Carteira</b>\\n\\nNão há transações registradas para essa carteira.")
+                    .replyMarkup(InlineKeyboardMarkup.builder()
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(walletId))))
+                            .build())
+                    .build();
         }
-
-        sessionManager.save(chatId, context);
-
-        String text = transactionType == TransactionType.EXPENSE
-                ? """
-                \uD83D\uDCB8 <b>Nova despesa</b>
-                
-                Digite a descrição da despesa.
-                
-                <i>Exemplo:</i> Mercado, Aluguel, Uber"""
-                : """
-                \uD83D\uDCB0 <b>Nova receita</b>
-                
-                Digite a descrição da receita.
-                
-                <i>Exemplo:</i> Salário, Freelance, Reembolso""";
-
 
         return EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)
-                .text(text)
-                .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(walletId))))
-                        .build())
+                .text("""
+                        💰 <b>Extrato da Carteira</b>
+                        
+                        Confira abaixo suas movimentações \uD83D\uDC47""")
                 .parseMode("HTML")
+                .replyMarkup(MenuUtils.createListTransactions(transactionPaginated))
                 .build();
     }
 }

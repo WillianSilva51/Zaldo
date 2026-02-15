@@ -5,8 +5,11 @@ import br.com.github.williiansilva51.zaldo.application.ports.out.UserRepositoryP
 import br.com.github.williiansilva51.zaldo.application.ports.out.WalletRepositoryPort;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,9 @@ public class CreateWalletService implements CreateWalletUseCase {
     private final WalletRepositoryPort walletRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
 
+    @Value("${zaldo.wallet.limit:10}")
+    private int maximumNumberOfWallets;
+
     @Override
     public Wallet execute(Wallet wallet) {
         String userId = wallet.getUser().getId();
@@ -26,9 +32,29 @@ public class CreateWalletService implements CreateWalletUseCase {
         User user = userRepositoryPort.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + userId));
 
+        long currentWalletCount = walletRepositoryPort.countByUserId(userId);
+
+        if (currentWalletCount >= maximumNumberOfWallets) {
+            throw new BusinessRuleException(
+                    String.format("Limite atingido. Você já possui %d/%d carteiras.", currentWalletCount, maximumNumberOfWallets));
+        }
+
+        if (walletRepositoryPort.existsByUserIdAndName(userId, wallet.getName())) {
+            throw new BusinessRuleException(String.format(
+                    "Já existe uma carteira com o nome '%s' para esse usuário.",
+                    wallet.getName()
+            ));
+        }
+
         wallet.setUser(user);
         wallet.setCreatedAt(LocalDateTime.now());
 
-        return walletRepositoryPort.save(wallet);
+        try {
+            return walletRepositoryPort.save(wallet);
+        } catch (DataIntegrityViolationException ex) {
+            throw new BusinessRuleException(
+                    "Já existe uma carteira com esse nome para esse usuário."
+            );
+        }
     }
 }

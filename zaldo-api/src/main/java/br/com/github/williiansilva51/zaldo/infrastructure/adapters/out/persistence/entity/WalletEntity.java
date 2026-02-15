@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "wallet")
+@Table(name = "wallet", uniqueConstraints = @UniqueConstraint(name = "uk_wallet_name_user", columnNames = {"name", "user_id"}))
 public class WalletEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class WalletEntity {
 
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

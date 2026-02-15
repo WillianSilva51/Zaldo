@@ -6,8 +6,9 @@ import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.enums.DirectionOrder;
 import br.com.github.williiansilva51.zaldo.core.enums.sort.WalletSortField;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
+import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class ListWalletCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return "BTN_LIST_WALLETS";
+        return BotAction.LIST_WALLETS.getActionName();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class ListWalletCallbackHandler implements TelegramCallbackHandler {
 
         sessionManager.setChatState(chatId, ChatState.IDLE);
 
-        String actionPage = data.split(":")[1];
+        String actionPage = BotAction.extractArg(data);
 
         int page;
 

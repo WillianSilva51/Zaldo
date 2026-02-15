@@ -4,6 +4,7 @@ import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.out.persistence.entity.TransactionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -15,5 +16,6 @@ public interface SpringDataTransactionRepository extends JpaRepository<Transacti
 
     Page<TransactionEntity> findByTypeAndDate(TransactionType type, LocalDate date, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"wallet"})
     Page<TransactionEntity> findByWalletId(Long walletId, Pageable pageable);
 }

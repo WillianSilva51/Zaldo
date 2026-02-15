@@ -12,7 +12,7 @@ public class UserMapper implements Mapper<User, CreateUserRequest, UserResponse,
     public User toDomain(CreateUserRequest request) {
         return User.builder()
                 .name(request.name())
-                .email(request.email())
+                .email(request.email().toLowerCase())
                 .password(request.password())
                 .build();
     }
