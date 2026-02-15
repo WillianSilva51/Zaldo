@@ -9,6 +9,7 @@ import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +39,22 @@ public class CreateWalletService implements CreateWalletUseCase {
                     String.format("Limite atingido. Você já possui %d/%d carteiras.", currentWalletCount, maximumNumberOfWallets));
         }
 
+        if (walletRepositoryPort.existsByUserIdAndName(userId, wallet.getName())) {
+            throw new BusinessRuleException(String.format(
+                    "Já existe uma carteira com o nome '%s' para esse usuário.",
+                    wallet.getName()
+            ));
+        }
+
         wallet.setUser(user);
         wallet.setCreatedAt(LocalDateTime.now());
 
-        return walletRepositoryPort.save(wallet);
+        try {
+            return walletRepositoryPort.save(wallet);
+        } catch (DataIntegrityViolationException ex) {
+            throw new BusinessRuleException(
+                    "Já existe uma carteira com esse nome para esse usuário."
+            );
+        }
     }
 }

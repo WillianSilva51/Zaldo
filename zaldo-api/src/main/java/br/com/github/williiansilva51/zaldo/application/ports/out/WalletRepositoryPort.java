@@ -20,4 +20,6 @@ public interface WalletRepositoryPort {
     BigDecimal getTotalBalanceByWalletAndUser(Long walletId, String userId);
 
     long countByUserId(String userId);
+
+    boolean existsByUserIdAndName(String userId, String name);
 }

@@ -57,4 +57,9 @@ public class WalletPersistenceAdapter implements WalletRepositoryPort {
     public long countByUserId(String userId) {
         return walletRepository.countByUserId(userId);
     }
+
+    @Override
+    public boolean existsByUserIdAndName(String userId, String name) {
+        return walletRepository.existsByUserIdAndName(userId, name);
+    }
 }

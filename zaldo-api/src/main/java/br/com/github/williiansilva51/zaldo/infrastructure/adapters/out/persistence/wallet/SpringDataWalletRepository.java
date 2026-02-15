@@ -36,4 +36,6 @@ public interface SpringDataWalletRepository extends JpaRepository<WalletEntity, 
 
 
     long countByUserId(String userId);
+
+    boolean existsByUserIdAndName(String userId, String name);
 }
