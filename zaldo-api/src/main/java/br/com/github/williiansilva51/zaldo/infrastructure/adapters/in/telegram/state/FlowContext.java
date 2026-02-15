@@ -30,6 +30,8 @@ public class FlowContext implements Serializable {
 
 
     private Long tempWalletId;
+
+    private Long tempTransactionId;
     private BigDecimal tempAmount;
     private String tempTransactionDescription;
     private TransactionType tempTransactionType;

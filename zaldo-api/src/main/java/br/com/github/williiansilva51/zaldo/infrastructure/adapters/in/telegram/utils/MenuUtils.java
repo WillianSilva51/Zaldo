@@ -3,6 +3,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.core.domain.Paginated;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -40,6 +41,16 @@ public class MenuUtils {
                 .build();
     }
 
+    public static InlineKeyboardMarkup createTransactionsKeyboard() {
+        InlineKeyboardButton btnUpdateTransaction = createButton("✏\uFE0F Editar Transação", BotAction.EDIT_TRANSACTION.getActionName());
+        InlineKeyboardButton btnDeleteTransaction = createButton("❌ Deletar Transação", BotAction.CONFIRM_DELETE_TRANSACTION.getActionName());
+        InlineKeyboardButton btnReturn = createBackButton(BotAction.LIST_TRANSACTIONS.build(0));
+
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(btnUpdateTransaction, btnDeleteTransaction))
+                .keyboardRow(new InlineKeyboardRow(btnReturn))
+                .build();
+    }
 
     public static InlineKeyboardMarkup createListWallets(Paginated<Wallet> wallets) {
         List<InlineKeyboardRow> rows = new ArrayList<>();
@@ -81,7 +92,12 @@ public class MenuUtils {
         for (Transaction transaction : transactionsList) {
             String callbackData = BotAction.SELECT_TRANSACTION.build(transaction.getId());
 
-            InlineKeyboardButton button = createButton("\uD83D\uDCB5 " + transaction.getDescription() + " - R$ " + transaction.getAmount(), callbackData);
+            String emoji = transaction.getType() == TransactionType.INCOME ? "\uD83D\uDFE2" : "\uD83D\uDD34";
+
+            String text = String.format("%s %s - R$ %s",
+                    emoji, transaction.getDescription(), transaction.getAmount());
+
+            InlineKeyboardButton button = createButton(text, callbackData);
 
             rows.add(new InlineKeyboardRow(button));
         }
@@ -99,10 +115,12 @@ public class MenuUtils {
             ));
         }
 
-        rows.add(new InlineKeyboardRow(createBackButton(BotAction.SELECT_WALLET.build(transactionsList
-                .getFirst()
-                .getWallet()
-                .getId()))));
+        if (!transactionsList.isEmpty()) {
+            rows.add(new InlineKeyboardRow(createBackButton(BotAction.SELECT_WALLET.build(transactionsList
+                    .getFirst()
+                    .getWallet()
+                    .getId()))));
+        }
 
         return InlineKeyboardMarkup.builder().keyboard(rows).build();
     }

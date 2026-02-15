@@ -68,7 +68,7 @@ public class ListTransactionCallbackHandler implements TelegramCallbackHandler {
                 .chatId(chatId)
                 .messageId(messageId)
                 .text("""
-                        \uD83D\uDCC4 <b>Extrato da Carteira</b>
+                        💰 <b>Extrato da Carteira</b>
                         
                         Confira abaixo suas movimentações \uD83D\uDC47""")
                 .parseMode("HTML")
