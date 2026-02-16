@@ -49,7 +49,16 @@ public class ListTransactionCallbackHandler implements TelegramCallbackHandler {
         }
 
         FlowContext context = sessionManager.get(chatId);
+
+        if (context == null) {
+            return MenuUtils.createErrorMessage(chatId, messageId, "Algo deu errado. Tente novamente.");
+        }
+
         Long walletId = context.getTempWalletId();
+
+        if (walletId == null) {
+            return MenuUtils.createErrorMessage(chatId, messageId, "Selecione uma carteira primeiro.");
+        }
 
         Paginated<Transaction> transactionPaginated = findTransactionByWalletIdUseCase
                 .execute(context.getTempWalletId(), page, 10, TransactionSortField.description, DirectionOrder.DESC);
@@ -61,6 +70,7 @@ public class ListTransactionCallbackHandler implements TelegramCallbackHandler {
                     .replyMarkup(InlineKeyboardMarkup.builder()
                             .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(walletId))))
                             .build())
+                    .parseMode("HTML")
                     .build();
         }
 

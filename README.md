@@ -40,8 +40,8 @@ O Zaldo permite gerenciar suas finanças sem sair do Telegram.
 
 O projeto foi desenhado seguindo as melhores práticas de engenharia de software para garantir manutenibilidade e desacoplamento.
 
-* **Linguagem:** [Java 25](https://jdk.java.net/25/) (Preview Features)
-* **Framework:** Spring Boot 3.x
+* **Linguagem:** [Java 25](https://jdk.java.net/25/)
+* **Framework:** Spring Boot 4.x
 * **Arquitetura:** Hexagonal (Ports & Adapters)
 * **Banco de Dados:** PostgreSQL 18.1
 * **Cache & Sessão:** Redis 8.4
@@ -69,7 +69,7 @@ A maneira mais fácil de rodar o Zaldo é via Docker, pois ele sobe o Banco, o R
 1.  **Clone o repositório:**
     ```bash
     git clone https://github.com/williansilva51/zaldo.git
-    cd zaldo-api
+    cd zaldo
     ```
 
 2.  **Configure as Variáveis de Ambiente:**
@@ -107,7 +107,7 @@ O sistema é configurado via variáveis de ambiente para facilitar o deploy em c
 
 ## 📖 Documentação da API
 
-O projeto possui integração com **Swagger UI** para exploração dos endpoints REST.
+O projeto possui integração com **Scalar** para exploração dos endpoints REST.
 
 Após iniciar a aplicação, acesse:
 👉 **[http://localhost:8080/scalar](http://localhost:8080/scalar)**

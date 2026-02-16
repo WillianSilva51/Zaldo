@@ -103,7 +103,6 @@ public class CreateWalletFlowHandler implements FlowHandler {
             return SendMessage.builder()
                     .chatId(chatId)
                     .text("Erro ao criar carteira: " + e.getMessage() + ".")
-                    .parseMode("HTML")
                     .replyMarkup(InlineKeyboardMarkup.builder()
                             .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0)))).build())
                     .build();
