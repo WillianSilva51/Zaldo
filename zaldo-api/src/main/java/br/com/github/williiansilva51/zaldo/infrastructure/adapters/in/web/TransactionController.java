@@ -90,8 +90,8 @@ public class TransactionController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Deletes a transaction by id", description = "Returns no content")
     @ApiResponse(responseCode = "204", description = "Transaction deleted successfully")
-    public ResponseEntity<Void> deleteTransactionById(@PathVariable Long id) {
-        deleteTransactionByIdUseCase.execute(id);
+    public ResponseEntity<Void> deleteTransactionById(@PathVariable Long id, @RequestParam String userId) {
+        deleteTransactionByIdUseCase.execute(id, userId);
 
         return ResponseEntity.noContent().build();
     }

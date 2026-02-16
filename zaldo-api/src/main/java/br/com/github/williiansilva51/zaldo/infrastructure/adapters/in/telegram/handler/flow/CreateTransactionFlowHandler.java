@@ -3,6 +3,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.application.ports.in.transaction.CreateTransactionUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
+import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
@@ -143,6 +144,11 @@ public class CreateTransactionFlowHandler implements FlowHandler {
         }
 
         Long walletId = context.getTempWalletId();
+
+        if (walletId == null) {
+            return null;
+        }
+
         Wallet wallet = Wallet.builder().id(walletId).build();
 
         Transaction transaction = Transaction.builder()
@@ -153,7 +159,18 @@ public class CreateTransactionFlowHandler implements FlowHandler {
                 .wallet(wallet)
                 .build();
 
-        createTransactionUseCase.execute(transaction);
+        try {
+            createTransactionUseCase.execute(transaction);
+        } catch (BusinessRuleException e) {
+            return SendMessage
+                    .builder()
+                    .chatId(chatId)
+                    .text(e.getMessage())
+                    .replyMarkup(InlineKeyboardMarkup.builder()
+                            .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(walletId)))).build())
+                    .build();
+        }
+
         sessionManager.clearSession(chatId);
 
         return SendMessage.builder()

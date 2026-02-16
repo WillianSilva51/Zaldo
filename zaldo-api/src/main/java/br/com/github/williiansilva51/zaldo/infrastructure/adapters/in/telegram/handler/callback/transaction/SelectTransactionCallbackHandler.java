@@ -3,6 +3,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.application.ports.in.transaction.FindTransactionByIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
@@ -47,6 +48,7 @@ public class SelectTransactionCallbackHandler implements TelegramCallbackHandler
 
         context.setChatState(ChatState.IDLE);
         context.setTempTransactionId(transactionId);
+        context.setTempTransactionDescription(transaction.getDescription());
 
         sessionManager.save(chatId, context);
 
@@ -60,10 +62,10 @@ public class SelectTransactionCallbackHandler implements TelegramCallbackHandler
                 
                 O que deseja fazer?
                 """.formatted(
-                transaction.getAmount(),
+                MenuUtils.numberFormat(transaction.getAmount()),
                 transaction.getDescription(),
                 transaction.getDate(),
-                transaction.getType()
+                transaction.getType() == TransactionType.INCOME ? "Receita" : "Despesa"
         );
 
         return EditMessageText.builder()

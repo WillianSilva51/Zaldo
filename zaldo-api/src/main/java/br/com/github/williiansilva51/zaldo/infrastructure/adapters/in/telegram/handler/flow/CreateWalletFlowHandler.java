@@ -76,6 +76,10 @@ public class CreateWalletFlowHandler implements FlowHandler {
     private SendMessage processWalletDescriptionInput(Long chatId, String text, FlowContext context) {
         User user = context.getAuthenticatedUser();
 
+        if (user == null) {
+            return null;
+        }
+
         Wallet wallet = Wallet.builder()
                 .name(context.getTempWalletName())
                 .description(text)
@@ -103,7 +107,6 @@ public class CreateWalletFlowHandler implements FlowHandler {
             return SendMessage.builder()
                     .chatId(chatId)
                     .text("Erro ao criar carteira: " + e.getMessage() + ".")
-                    .parseMode("HTML")
                     .replyMarkup(InlineKeyboardMarkup.builder()
                             .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0)))).build())
                     .build();

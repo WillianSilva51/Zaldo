@@ -71,6 +71,10 @@ public class LoginFlowHandler implements FlowHandler {
     private SendMessage processPasswordInput(Long chatId, String text, FlowContext context, String userId) {
         String email = context.getTempEmail();
 
+        if (email == null) {
+            return null;
+        }
+
         updateUserUseCase.execute(userId, User.builder()
                 .email(email)
                 .password(text)
