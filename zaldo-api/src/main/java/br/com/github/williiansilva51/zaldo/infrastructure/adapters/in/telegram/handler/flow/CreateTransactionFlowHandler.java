@@ -144,6 +144,11 @@ public class CreateTransactionFlowHandler implements FlowHandler {
         }
 
         Long walletId = context.getTempWalletId();
+
+        if (walletId == null) {
+            return null;
+        }
+
         Wallet wallet = Wallet.builder().id(walletId).build();
 
         Transaction transaction = Transaction.builder()

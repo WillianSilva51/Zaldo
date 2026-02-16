@@ -10,10 +10,19 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MenuUtils {
+    private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
+
+    public static String numberFormat(BigDecimal amount) {
+        return currencyFormat.format(amount);
+    }
+
     public static InlineKeyboardMarkup createMainKeyboard() {
         InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", BotAction.LIST_WALLETS.build(0));
         InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", BotAction.LOGIN.getActionName());
@@ -95,7 +104,7 @@ public class MenuUtils {
             String emoji = transaction.getType() == TransactionType.INCOME ? "\uD83D\uDFE2" : "\uD83D\uDD34";
 
             String text = String.format("%s %s - R$ %s",
-                    emoji, transaction.getDescription(), transaction.getAmount());
+                    emoji, transaction.getDescription(), numberFormat(transaction.getAmount()));
 
             InlineKeyboardButton button = createButton(text, callbackData);
 

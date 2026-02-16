@@ -5,13 +5,17 @@ meta {
 }
 
 delete {
-  url: {{baseUrl}}/transactions/{{transactionId}}
+  url: {{baseUrl}}/transactions/{{transactionId}}?userId=72575aa8-0fd3-418f-844e-8a7e5217b7e6
   body: none
   auth: inherit
 }
 
+params:query {
+  userId: 72575aa8-0fd3-418f-844e-8a7e5217b7e6
+}
+
 vars:pre-request {
-  transactionId: 13
+  transactionId: 19
 }
 
 assert {
