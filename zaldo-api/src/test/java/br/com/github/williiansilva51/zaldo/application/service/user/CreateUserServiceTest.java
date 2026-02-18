@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CreateUserServiceTest {
+class CreateUserServiceTest {
     @Mock
     private UserRepositoryPort userRepositoryPort;
 
