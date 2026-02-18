@@ -20,4 +20,5 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build and Test with Maven
+      working-directory: zaldo-api
       run: mvn clean test
