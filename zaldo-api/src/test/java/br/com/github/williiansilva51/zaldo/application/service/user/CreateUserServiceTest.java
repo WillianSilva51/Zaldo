@@ -65,7 +65,7 @@ class CreateUserServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar a exceção 'DomainValidationException' quando o o e-mail não for único")
+    @DisplayName("Deve lançar a exceção 'DomainValidationException' quando o e-mail não for único")
     void shouldThrowDomainValidationExceptionWhenEmailIsNotUnique() {
         User user = createValidUser();
 

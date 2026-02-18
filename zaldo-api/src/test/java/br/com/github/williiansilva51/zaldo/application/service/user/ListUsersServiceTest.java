@@ -33,7 +33,7 @@ class ListUsersServiceTest {
     }
 
     @Test
-    @DisplayName("Deve retornar a lista vazia quando não ter usuários")
+    @DisplayName("Deve retornar a lista vazia quando não há usuários")
     void shouldReturnEmptyListWhenThereAreNoUsers() {
         when(userRepositoryPort.findAll()).thenReturn(List.of());
 
