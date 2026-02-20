@@ -58,7 +58,8 @@ public class TransactionController {
     public ResponseEntity<PaginatedResponse<TransactionResponse>> getAllTransactions(@RequestParam(required = false) TransactionType type,
                                                                                      @RequestParam(required = false) LocalDate date,
                                                                                      @RequestParam(defaultValue = "0") @Min(value = 0, message = "Valor mínimo da página é 0") int page,
-                                                                                     @RequestParam(defaultValue = "10") @Max(value = 100, message = "O valor máximo do tamanho é 100") @Min(value = 1, message = "Valor mínimo do tamanho é 1") int size,
+                                                                                     @RequestParam(defaultValue = "10") @Max(value = 100, message = "O valor máximo do tamanho é 100")
+                                                                                     @Min(value = 1, message = "Valor mínimo do tamanho é 1") int size,
                                                                                      @RequestParam(defaultValue = "date") TransactionSortField sort,
                                                                                      @RequestParam(defaultValue = "DESC") DirectionOrder direction) {
         Paginated<Transaction> paginated = listTransactionUseCase.execute(type, date, page, size, sort, direction);

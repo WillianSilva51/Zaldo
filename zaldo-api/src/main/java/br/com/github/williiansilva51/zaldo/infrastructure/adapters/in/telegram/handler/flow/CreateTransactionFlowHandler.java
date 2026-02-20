@@ -116,7 +116,7 @@ public class CreateTransactionFlowHandler implements FlowHandler {
 
         return SendMessage.builder()
                 .chatId(chatId)
-                .text("📧 Valor salvo! Agora digite a data da <b>transação</b>(YYYY/MM/DD ou YYYY-MM-DD) (Opcional):")
+                .text("📧 Valor salvo! Agora digite a data da <b>transação</b>(DD/MM/YYYY) (Opcional):")
                 .replyMarkup(InlineKeyboardMarkup.builder()
                         .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(context.getTempWalletId()))))
                         .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular data", BotAction.SKIP_DATE_TRANSACTION.getActionName())))
@@ -130,11 +130,11 @@ public class CreateTransactionFlowHandler implements FlowHandler {
 
         if (text != null) {
             try {
-                date = LocalDate.parse(text.replace("/", "-"));
+                date = LocalDate.parse(text, MenuUtils.getFormat());
             } catch (DateTimeException e) {
                 return SendMessage.builder()
                         .chatId(chatId)
-                        .text("❌ Data inválida. Digite uma data válida, exemplo: 2025/05/10 ou 2025-05-10")
+                        .text("❌ Data inválida. Digite uma data válida, exemplo: 21/12/2025")
                         .replyMarkup(InlineKeyboardMarkup.builder()
                                 .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(context.getTempWalletId()))))
                                 .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("Pular data", BotAction.SKIP_DATE_TRANSACTION.getActionName())))

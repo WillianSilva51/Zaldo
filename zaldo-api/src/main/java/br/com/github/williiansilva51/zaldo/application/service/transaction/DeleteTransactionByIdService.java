@@ -26,7 +26,7 @@ public class DeleteTransactionByIdService implements DeleteTransactionByIdUseCas
         Wallet wallet = findWalletByIdUseCase.execute(transaction.getWallet().getId());
 
         if (!wallet.getUser().getId().equals(authenticatedUserId)) {
-            throw new DomainValidationException("Você não tem permissão para apagar esta carteira.");
+            throw new DomainValidationException("Você não tem permissão para apagar esta Transação.");
         }
 
         transactionRepositoryPort.deleteById(id);

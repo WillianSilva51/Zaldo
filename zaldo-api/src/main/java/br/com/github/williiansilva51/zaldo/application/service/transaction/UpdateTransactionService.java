@@ -25,22 +25,29 @@ public class UpdateTransactionService implements UpdateTransactionUseCase {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Transação não encontrada para atualização: " + id));
 
+        BigDecimal oldAmount = existingTransaction.getAmount();
+        boolean oldIsIncome = existingTransaction.isIncome();
+
         existingTransaction.update(transaction);
 
         if (!existingTransaction.isPositive()) {
             throw new IllegalArgumentException("A transação não pode ter valor negativo ou zero após atualização.");
         }
 
-        if (!existingTransaction.isIncome()) {
-            Long walletId = existingTransaction.getWallet().getId();
-            String userId = existingTransaction.getWallet().getUser().getId();
-            BigDecimal value = getBalanceByWalletAndUserUseCase.execute(walletId, userId);
+        Long walletId = existingTransaction.getWallet().getId();
+        String userId = existingTransaction.getWallet().getUser().getId();
+        BigDecimal currentBalance = getBalanceByWalletAndUserUseCase.execute(walletId, userId);
 
-            BigDecimal result = value.subtract(existingTransaction.getAmount());
+        BigDecimal balanceWithoutOld = oldIsIncome ?
+                currentBalance.subtract(oldAmount) :
+                currentBalance.add(oldAmount);
 
-            if (result.compareTo(BigDecimal.ZERO) < 0) {
-                throw new BusinessRuleException("O valor da Transação irá negativar o saldo da carteira.");
-            }
+        BigDecimal finalBalance = existingTransaction.isIncome()
+                ? balanceWithoutOld.add(existingTransaction.getAmount())
+                : balanceWithoutOld.subtract(existingTransaction.getAmount());
+
+        if (finalBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new BusinessRuleException("Operação cancelada: o saldo final seria negativo (" + finalBalance + ")");
         }
 
         return transactionRepositoryPort.save(existingTransaction);

@@ -12,15 +12,21 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class MenuUtils {
     private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static String numberFormat(BigDecimal amount) {
         return currencyFormat.format(amount);
+    }
+
+    public static DateTimeFormatter getFormat() {
+        return dateTimeFormatter;
     }
 
     public static InlineKeyboardMarkup createMainKeyboard() {
@@ -103,7 +109,7 @@ public class MenuUtils {
 
             String emoji = transaction.getType() == TransactionType.INCOME ? "\uD83D\uDFE2" : "\uD83D\uDD34";
 
-            String text = String.format("%s %s - R$ %s",
+            String text = String.format("%s %s - %s",
                     emoji, transaction.getDescription(), numberFormat(transaction.getAmount()));
 
             InlineKeyboardButton button = createButton(text, callbackData);
