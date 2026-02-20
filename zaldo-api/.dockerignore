@@ -3,6 +3,8 @@ target
 .idea
 *.class
 *.jar
-HELP.md
+*.md
 mvnw
 mvnw.cmd
+.github
+.env

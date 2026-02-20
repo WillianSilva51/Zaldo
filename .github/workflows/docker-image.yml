@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -33,3 +33,5 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/zaldo:latest
           #  ${{ secrets.DOCKER_USERNAME }}/zaldo:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
