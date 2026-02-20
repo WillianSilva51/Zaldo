@@ -36,4 +36,6 @@ public class FlowContext implements Serializable {
     private String tempTransactionDescription;
     private TransactionType tempTransactionType;
     private LocalDate tempDate;
+
+    private String editingField;
 }

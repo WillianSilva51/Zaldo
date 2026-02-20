@@ -14,5 +14,8 @@ public enum ChatState {
     //Fluxo de Cadastro de Transação
     WAITING_TRANSACTION_AMOUNT,
     WAITING_TRANSACTION_DESCRIPTION,
-    WAITING_TRANSACTION_DATE
+    WAITING_TRANSACTION_DATE,
+
+    //Fluxo de edição de Transação
+    WAITING_EDIT_TX_VALUE
 }
