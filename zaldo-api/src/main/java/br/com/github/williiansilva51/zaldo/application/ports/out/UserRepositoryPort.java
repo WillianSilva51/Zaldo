@@ -10,6 +10,8 @@ public interface UserRepositoryPort {
 
     List<User> findAll();
 
+    boolean existsById(String id);
+
     Optional<User> findById(String id);
 
     Optional<User> findByTelegramId(String telegramId);

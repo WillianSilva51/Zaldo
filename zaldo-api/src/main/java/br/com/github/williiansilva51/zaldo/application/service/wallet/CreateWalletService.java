@@ -7,7 +7,6 @@ import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.core.domain.Wallet;
 import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException;
 import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -16,14 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class CreateWalletService implements CreateWalletUseCase {
     private final WalletRepositoryPort walletRepositoryPort;
     private final UserRepositoryPort userRepositoryPort;
+    private final int maximumNumberOfWallets;
 
-    @Value("${zaldo.wallet.limit:10}")
-    private int maximumNumberOfWallets;
+    public CreateWalletService(WalletRepositoryPort walletRepositoryPort,
+                               UserRepositoryPort userRepositoryPort,
+                               @Value("${zaldo.wallet.limit:10}") int maximumNumberOfWallets) {
+        this.walletRepositoryPort = walletRepositoryPort;
+        this.userRepositoryPort = userRepositoryPort;
+        this.maximumNumberOfWallets = maximumNumberOfWallets;
+    }
 
     @Override
     public Wallet execute(Wallet wallet) {
