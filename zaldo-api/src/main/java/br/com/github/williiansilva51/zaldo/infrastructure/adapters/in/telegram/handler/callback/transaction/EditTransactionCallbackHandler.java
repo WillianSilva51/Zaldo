@@ -36,7 +36,10 @@ public class EditTransactionCallbackHandler implements TelegramCallbackHandler {
         FlowContext context = sessionManager.get(chatId);
 
         Long currentTransactionId = context.getTempTransactionId();
-        assert currentTransactionId != null;
+
+        if (currentTransactionId == null) {
+            throw new IllegalStateException("Temporary transaction id must not be null when editing a transaction");
+        }
 
         Transaction transaction = findTransactionByIdUseCase.execute(currentTransactionId);
 

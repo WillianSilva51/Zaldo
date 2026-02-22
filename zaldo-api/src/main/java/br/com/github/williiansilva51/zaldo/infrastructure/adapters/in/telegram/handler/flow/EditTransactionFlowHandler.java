@@ -3,6 +3,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 import br.com.github.williiansilva51.zaldo.application.ports.in.transaction.UpdateTransactionUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.Transaction;
 import br.com.github.williiansilva51.zaldo.core.enums.TransactionType;
+import br.com.github.williiansilva51.zaldo.core.exceptions.BusinessRuleException;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.FlowContext;
@@ -58,6 +59,11 @@ public class EditTransactionFlowHandler implements FlowHandler {
                     .replyMarkup(InlineKeyboardMarkup.builder()
                             .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_TRANSACTION.build(transactionId)))).build())
                     .build();
+        } catch (IllegalArgumentException | BusinessRuleException e) {
+            return SendMessage.builder()
+                    .chatId(chatId)
+                    .text("❌ " + e.getMessage() + ".")
+                    .build();
         } catch (Exception e) {
             return SendMessage.builder()
                     .chatId(chatId)
@@ -78,6 +84,7 @@ public class EditTransactionFlowHandler implements FlowHandler {
                 else if (text.equalsIgnoreCase("despesa")) transaction.setType(TransactionType.EXPENSE);
                 else throw new IllegalArgumentException("Tipo inválido");
             }
+            default -> throw new IllegalArgumentException("Campo sendo editado desconhecido: " + fieldBeingEdited);
         }
         return transaction;
     }

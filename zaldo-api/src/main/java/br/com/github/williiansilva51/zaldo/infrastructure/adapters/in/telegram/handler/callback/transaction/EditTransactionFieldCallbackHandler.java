@@ -38,7 +38,7 @@ public class EditTransactionFieldCallbackHandler implements TelegramCallbackHand
         String promptMessage = switch (fieldToEdit) {
             case "AMOUNT" -> "💰 Digite o <b>NOVO VALOR</b> (Ex: 50.50):";
             case "DESCRIPTION" -> "📝 Digite a <b>NOVA DESCRIÇÃO</b>:";
-            case "DATE" -> "📅 Digite a <b>NOVA DATA</b> (DD/MM/AAAA):";
+            case "DATE" -> "📅 Digite a <b>NOVA DATA</b> (DD/MM/YYYY):";
             case "TYPE" ->
                     "📂 Digite o <b>NOVO TIPO</b> (Digite 'RECEITA' ou 'DESPESA'):"; // Pode ser melhorado com botões no futuro
             default -> "✏️ Digite o novo valor:";

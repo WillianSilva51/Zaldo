@@ -42,7 +42,7 @@ public class DeleteTransactionCallbackHandler implements TelegramCallbackHandler
             return EditMessageText.builder()
                     .chatId(chatId)
                     .messageId(messageId)
-                    .text("⚠\uFE0F Erro: Não foi possível identificar a carteira. Tente listar novamente ou a transação.")
+                    .text("⚠\uFE0F Erro: Não foi possível identificar a transação ou a carteira. Tente listar novamente ou a transação.")
                     .replyMarkup(InlineKeyboardMarkup.builder()
                             .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0))))
                             .build())

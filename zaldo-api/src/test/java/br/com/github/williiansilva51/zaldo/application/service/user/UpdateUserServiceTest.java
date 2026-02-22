@@ -51,7 +51,7 @@ class UpdateUserServiceTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar o usuário quanto tudo estiver correto")
+    @DisplayName("Deve atualizar o usuário quando tudo estiver correto")
     void shouldUpdateUserSuccessfully() {
         String rawPassword = updateRequest.getPassword();
         when(userRepositoryPort.findById(userId)).thenReturn(Optional.of(existingUser));
@@ -119,10 +119,12 @@ class UpdateUserServiceTest {
 
         when(userRepositoryPort.findById(userId)).thenReturn(Optional.of(existingUser));
         when(userRepositoryPort.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+        when(passwordEncoder.encode(updateRequest.getPassword())).thenReturn("encoded-password");
 
         updateUserService.execute(userId, updateRequest);
 
         verify(userRepositoryPort, never()).findByEmail(anyString());
+
         verify(userRepositoryPort).save(existingUser);
     }
 

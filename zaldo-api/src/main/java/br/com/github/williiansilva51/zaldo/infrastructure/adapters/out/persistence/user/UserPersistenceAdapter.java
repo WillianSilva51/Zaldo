@@ -48,6 +48,11 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public boolean existsById(String id) {
+        return springDataUserRepository.existsById(id);
+    }
+
+    @Override
     public Optional<User> findById(String id) {
         return springDataUserRepository.findById(id)
                 .map(mapper::toDomain);
