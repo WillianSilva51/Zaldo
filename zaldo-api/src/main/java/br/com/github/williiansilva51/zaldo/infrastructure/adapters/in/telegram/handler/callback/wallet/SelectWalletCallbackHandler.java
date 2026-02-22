@@ -62,7 +62,7 @@ public class SelectWalletCallbackHandler implements TelegramCallbackHandler {
                 """
                         🏦 <b>Carteira: %s</b>
                         📄 Descrição: %s
-                        💰 Saldo: R$ %s
+                        💰 Saldo: %s
                         
                         O que deseja fazer?""",
                 wallet.getName(), description, MenuUtils.numberFormat(balance)
