@@ -9,7 +9,10 @@ public enum BotAction {
     MAIN_MENU("BTN_MAIN_MENU"),
 
     // --- Login / Usuário ---
+    CONFIG("BTN_CONFIG"),
     LOGIN("BTN_LOGIN"),
+    CONFIRM_DELETE_USER("BTN_CONFIRM_DELETE_USER"),
+    DELETE_USER("BTN_DELETE_USER"),
 
     // --- Carteiras (Wallets) ---
     LIST_WALLETS("BTN_LIST_WALLETS"),

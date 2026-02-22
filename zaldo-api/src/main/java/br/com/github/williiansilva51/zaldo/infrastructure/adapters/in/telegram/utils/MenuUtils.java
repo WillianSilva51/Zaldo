@@ -31,7 +31,7 @@ public class MenuUtils {
 
     public static InlineKeyboardMarkup createMainKeyboard() {
         InlineKeyboardButton btnWallets = createButton("\uD83D\uDCB0 Minhas Carteiras", BotAction.LIST_WALLETS.build(0));
-        InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações / Acesso Web", BotAction.LOGIN.getActionName());
+        InlineKeyboardButton btnWeb = createButton("⚙\uFE0F Configurações", BotAction.CONFIG.getActionName());
 
         InlineKeyboardRow row1 = new InlineKeyboardRow(btnWallets);
         InlineKeyboardRow row2 = new InlineKeyboardRow(btnWeb);
@@ -52,6 +52,17 @@ public class MenuUtils {
         return InlineKeyboardMarkup.builder()
                 .keyboardRow(new InlineKeyboardRow(btnExpense, btnIncome))
                 .keyboardRow(new InlineKeyboardRow(btnStatement, btnDeleteWallet))
+                .keyboardRow(new InlineKeyboardRow(btnReturn))
+                .build();
+    }
+
+    public static InlineKeyboardMarkup createConfigKeyboard() {
+        InlineKeyboardButton btnLogin = createButton("\uD83D\uDD10 Login (Acesso Web)", BotAction.LOGIN.getActionName());
+        InlineKeyboardButton btnDeleteUser = createButton("⚠\uFE0F Deletar Usuário", BotAction.CONFIRM_DELETE_USER.getActionName());
+        InlineKeyboardButton btnReturn = createBackButton(BotAction.MAIN_MENU.getActionName());
+
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(btnLogin, btnDeleteUser))
                 .keyboardRow(new InlineKeyboardRow(btnReturn))
                 .build();
     }
