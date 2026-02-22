@@ -26,11 +26,19 @@ jobs:
 
       - name: Run tests
         working-directory: zaldo-api
-        run: mvn test
+        run: |
+          mvn -B test | tee test-output.txt
 
-      - name: Publish test report
+      - name: Add Test Summary
         if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: test-report
-          path: zaldo-api/target/surefire-reports
+        run: |
+          echo "## 🧪 Resultado dos Testes" >> $GITHUB_STEP_SUMMARY
+          grep "Tests run:" test-output.txt >> $GITHUB_STEP_SUMMARY
+
+      - name: Add Test Summary
+        if: always()
+        run: |
+          echo "## 🧪 Resultado dos Testes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          grep "Tests run:" test-output.txt >> $GITHUB_STEP_SUMMARY || echo "Nenhum resumo encontrado." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
