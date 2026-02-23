@@ -154,6 +154,14 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         if (handler != null) {
             sendMessage = handler.execute(message, userName);
         } else {
+            if (user == null) {
+                executeClient(SendMessage.builder()
+                        .chatId(chatId)
+                        .text("❌ Você não tem conta no Zaldo use o comando /start para criar sua conta!!")
+                        .build(), null);
+
+                return;
+            }
             sendMessage = commandHandlers.get("/help")
                     .execute(message, userName);
         }
