@@ -2,9 +2,7 @@ package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,12 +14,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 @Component
 @RequiredArgsConstructor
-public class LoginCallbackHandler implements TelegramCallbackHandler {
-    private final UserSessionManager userSessionManager;
+public class ConfirmDeleteUserCallbackHandler implements TelegramCallbackHandler {
 
     @Override
     public String getActionName() {
-        return BotAction.LOGIN.getActionName();
+        return BotAction.CONFIRM_DELETE_USER.getActionName();
     }
 
     @Override
@@ -29,16 +26,14 @@ public class LoginCallbackHandler implements TelegramCallbackHandler {
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
-        userSessionManager.setChatState(chatId, ChatState.WAITING_LOGIN_EMAIL);
-
         return EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)
-                .text("Ótimo! Digite o <b>e-mail</b> que você deseja usar para o acesso Web:")
-                .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils
-                                .createBackButton(BotAction.MAIN_MENU.getActionName())))
+                .text("⚠\uFE0F Tem certeza de que deseja excluir seu usuário? Essa ação não pode ser desfeita.")
+                .replyMarkup(InlineKeyboardMarkup.builder()
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("\uD83D\uDDD1\uFE0F Excluir usuário", BotAction.DELETE_USER.getActionName())))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.CONFIG.getActionName())))
                         .build())
-                .parseMode("HTML")
                 .build();
     }
 }

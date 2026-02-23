@@ -6,6 +6,7 @@ import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
@@ -24,7 +25,7 @@ public class StartCommandHandler implements TelegramCommandHandler {
     }
 
     @Override
-    public SendMessage execute(Message message, String username) {
+    public BotApiMethod<?> execute(Message message, String username) {
         String telegramId = message.getFrom().getId().toString();
         Long chatId = message.getChatId();
 

@@ -31,8 +31,10 @@ jobs:
 
       - name: Add Test Summary
         if: always()
+        working-directory: zaldo-api
         run: |
           echo "## 🧪 Resultado dos Testes" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          grep "Tests run:" test-output.txt >> $GITHUB_STEP_SUMMARY || echo "Nenhum resumo encontrado." >> $GITHUB_STEP_SUMMARY
+          # Buscamos apenas a linha que contém o resumo final (geralmente a última ocorrência)
+          grep "Tests run:" test-output.txt | tail -n 1 >> $GITHUB_STEP_SUMMARY || echo "Nenhum resumo encontrado." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

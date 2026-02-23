@@ -66,7 +66,7 @@ public class ListTransactionCallbackHandler implements TelegramCallbackHandler {
         if (transactionPaginated.totalElements() == 0) {
             return EditMessageText.builder()
                     .chatId(chatId)
-                    .messageId(messageId).text("\uD83D\uDCED <b>Extrato da Carteira</b>\\n\\nNão há transações registradas para essa carteira.")
+                    .messageId(messageId).text("\uD83D\uDCED <b>Extrato da Carteira</b>\n\nNão há transações registradas para essa carteira.")
                     .replyMarkup(InlineKeyboardMarkup.builder()
                             .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.SELECT_WALLET.build(walletId))))
                             .build())

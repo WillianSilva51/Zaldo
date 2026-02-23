@@ -1,8 +1,9 @@
 package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.user;
 
+import br.com.github.williiansilva51.zaldo.application.ports.in.user.DeleteUserByIdUseCase;
 import br.com.github.williiansilva51.zaldo.core.domain.User;
+import br.com.github.williiansilva51.zaldo.core.exceptions.ResourceNotFoundException;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
-import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.ChatState;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.state.UserSessionManager;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
@@ -11,17 +12,16 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 @Component
 @RequiredArgsConstructor
-public class LoginCallbackHandler implements TelegramCallbackHandler {
-    private final UserSessionManager userSessionManager;
+public class DeleteUserCallbackHandler implements TelegramCallbackHandler {
+    private final UserSessionManager sessionManager;
+    private final DeleteUserByIdUseCase deleteUserByIdUseCase;
 
     @Override
     public String getActionName() {
-        return BotAction.LOGIN.getActionName();
+        return BotAction.DELETE_USER.getActionName();
     }
 
     @Override
@@ -29,16 +29,17 @@ public class LoginCallbackHandler implements TelegramCallbackHandler {
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
-        userSessionManager.setChatState(chatId, ChatState.WAITING_LOGIN_EMAIL);
+        try {
+            deleteUserByIdUseCase.execute(user.getId());
+            sessionManager.clearSession(chatId);
+        } catch (ResourceNotFoundException e) {
+            return MenuUtils.createErrorMessage(chatId, messageId, e.getMessage());
+        }
 
         return EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)
-                .text("Ótimo! Digite o <b>e-mail</b> que você deseja usar para o acesso Web:")
-                .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils
-                                .createBackButton(BotAction.MAIN_MENU.getActionName())))
-                        .build())
-                .parseMode("HTML")
+                .text("Todos seus dados foram apagados.\n\nMuito obrigado por usar o Zaldo, até a próxima!!! \uD83D\uDE0A")
                 .build();
     }
 }
