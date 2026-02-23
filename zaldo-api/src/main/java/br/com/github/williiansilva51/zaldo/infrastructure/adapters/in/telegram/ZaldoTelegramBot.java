@@ -17,6 +17,7 @@ import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateC
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -81,11 +82,46 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         }
     }
 
-    private void executeClient(BotApiMethod<?> method) {
+    private void executeClient(BotApiMethod<?> method, Long chatId) {
         try {
-            telegramClient.execute(method);
+            var response = telegramClient.execute(method);
+
+            boolean isMessage = chatId != null && method instanceof SendMessage sendMessage && sendMessage.getReplyMarkup() != null;
+
+            if (isMessage) {
+                if (response instanceof Message sentMessage) {
+                    FlowContext context = sessionManager.get(chatId);
+                    context.setLastMessageId(sentMessage.getMessageId());
+                    sessionManager.save(chatId, context);
+                }
+            }
         } catch (TelegramApiException e) {
             log.error("Erro ao executar método na API do Telegram: {}", e.getMessage(), e);
+        }
+    }
+
+    private void removeKeyboard(Long chatId, Integer messageId) {
+        if (messageId == null) {
+            return;
+        }
+        try {
+            telegramClient.execute(EditMessageReplyMarkup.builder()
+                    .chatId(chatId)
+                    .messageId(messageId)
+                    .replyMarkup(null)
+                    .build());
+        } catch (TelegramApiException e) {
+            log.warn("Teclado da msg {} já removido ou expirado.", messageId);
+        }
+    }
+
+    private void clearActiveKeyboard(Long chatId) {
+        FlowContext context = sessionManager.get(chatId);
+
+        if (context.getLastMessageId() != null) {
+            removeKeyboard(chatId, context.getLastMessageId());
+            context.setLastMessageId(null);
+            sessionManager.save(chatId, context);
         }
     }
 
@@ -95,6 +131,8 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         Long chatId = message.getChatId();
         String userName = message.getFrom().getUserName();
 
+        clearActiveKeyboard(chatId);
+
         FlowContext context = sessionManager.get(chatId);
         User user = userCacheService.getAuthenticatedUser(telegramId, chatId);
 
@@ -102,7 +140,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
             SendMessage flowResponse = flowRouter.route(context.getChatState(), chatId, text, user.getId());
 
             if (flowResponse != null) {
-                executeClient(flowResponse);
+                executeClient(flowResponse, chatId);
                 return;
             }
         }
@@ -120,14 +158,30 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
                     .execute(message, userName);
         }
 
-        executeClient(sendMessage);
+        executeClient(sendMessage, chatId);
     }
 
     private void handleCallback(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.getMessage().getChatId();
+        Integer callbackMessageId = callbackQuery.getMessage().getMessageId();
         String telegramId = callbackQuery.getFrom().getId().toString();
         String actionRaw = callbackQuery.getData();
         String actionKey = actionRaw.contains(":") ? actionRaw.split(":")[0] : actionRaw;
+
+        FlowContext context = sessionManager.get(chatId);
+
+        if (context.getLastMessageId() != null && !context.getLastMessageId().equals(callbackMessageId)) {
+            try {
+                telegramClient.execute(AnswerCallbackQuery.builder()
+                        .callbackQueryId(callbackQuery.getId())
+                        .showAlert(true)
+                        .text("⏳ Esta ação expirou. Use os botões mais recentes.")
+                        .build());
+            } catch (TelegramApiException ignored) {
+            }
+            removeKeyboard(chatId, callbackMessageId);
+            return;
+        }
 
         try {
             telegramClient.execute(
@@ -148,13 +202,13 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
 
         if (handler != null) {
             BotApiMethod<?> response = handler.execute(callbackQuery, user);
-            executeClient(response);
+            executeClient(response, chatId);
         } else {
             BotApiMethod<?> sendMessage = commandHandlers.get("/help")
                     .execute(Message.builder().chat(callbackQuery.getMessage().getChat()).build(),
                             callbackQuery.getFrom().getUserName());
 
-            executeClient(sendMessage);
+            executeClient(sendMessage, chatId);
         }
     }
 }

@@ -19,6 +19,7 @@ public class FlowContext implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private ChatState chatState = ChatState.IDLE;
+    private Integer lastMessageId;
 
     private User authenticatedUser;
     private String tempEmail;
