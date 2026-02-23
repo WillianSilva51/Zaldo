@@ -11,10 +11,10 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.s
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
 import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
+import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -40,13 +40,14 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
     private final UserSessionManager sessionManager;
 
     public ZaldoTelegramBot(@Value("${api.security.token.bot}") String token,
+                            TelegramClient tClient,
                             UserCacheService cache,
                             List<TelegramCommandHandler> commandList,
                             List<TelegramCallbackHandler> callbackList,
                             FlowRouter router,
                             UserSessionManager manager) {
         botToken = token;
-        telegramClient = new OkHttpTelegramClient(getBotToken());
+        telegramClient = tClient;
         userCacheService = cache;
         commandHandlers = commandList.stream()
                 .collect(Collectors.toMap(TelegramCommandHandler::getCommandName, Function.identity()));
@@ -110,7 +111,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
 
         TelegramCommandHandler handler = commandHandlers.get(command);
 
-        SendMessage sendMessage;
+        BotApiMethod<?> sendMessage;
 
         if (handler != null) {
             sendMessage = handler.execute(message, userName);
@@ -128,6 +129,15 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         String actionRaw = callbackQuery.getData();
         String actionKey = actionRaw.contains(":") ? actionRaw.split(":")[0] : actionRaw;
 
+        try {
+            telegramClient.execute(
+                    AnswerCallbackQuery.builder()
+                            .callbackQueryId(callbackQuery.getId())
+                            .build());
+        } catch (TelegramApiException e) {
+            log.error("Erro ao responder callback query", e);
+        }
+
         User user = userCacheService.getAuthenticatedUser(telegramId, chatId);
 
         if (user == null) {
@@ -140,7 +150,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
             BotApiMethod<?> response = handler.execute(callbackQuery, user);
             executeClient(response);
         } else {
-            SendMessage sendMessage = commandHandlers.get("/help")
+            BotApiMethod<?> sendMessage = commandHandlers.get("/help")
                     .execute(Message.builder().chat(callbackQuery.getMessage().getChat()).build(),
                             callbackQuery.getFrom().getUserName());
 
