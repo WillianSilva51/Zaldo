@@ -69,13 +69,12 @@ public class MenuUtils {
     }
 
     public static InlineKeyboardMarkup createManegeUserKeyboard() {
-        //     InlineKeyboardButton btnLogin = createButton("\uD83D\uDD10 Login (Acesso Web)", BotAction.LOGIN.getActionName());
-        InlineKeyboardButton btnEditUser = createButton("✏\uFE0F Editar dados", BotAction.EDIT_USER.getActionName());
+        InlineKeyboardButton btnLogin = createButton("\uD83D\uDD10 Login (Acesso Web)", BotAction.LOGIN.getActionName());
         InlineKeyboardButton btnDeleteUser = createButton("⚠\uFE0F Deletar conta", BotAction.CONFIRM_DELETE_USER.getActionName());
         InlineKeyboardButton btnReturn = createBackButton(BotAction.CONFIG.getActionName());
 
         return InlineKeyboardMarkup.builder()
-                .keyboardRow(new InlineKeyboardRow(btnEditUser))
+                .keyboardRow(new InlineKeyboardRow(btnLogin))
                 .keyboardRow(new InlineKeyboardRow(btnDeleteUser))
                 .keyboardRow(new InlineKeyboardRow(btnReturn))
                 .build();
