@@ -9,16 +9,13 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 @Component
 @RequiredArgsConstructor
-public class ConfirmDeleteUserCallbackHandler implements TelegramCallbackHandler {
-
+public class ManegeUserCallbackHandler implements TelegramCallbackHandler {
     @Override
     public String getActionName() {
-        return BotAction.CONFIRM_DELETE_USER.getActionName();
+        return BotAction.MANEGE_USER.getActionName();
     }
 
     @Override
@@ -26,14 +23,33 @@ public class ConfirmDeleteUserCallbackHandler implements TelegramCallbackHandler
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
+        String informationUser = String.format(
+                """
+                        👤 <b>Seus dados</b>
+                        
+                        🆔 <b>ID:</b> <code>%s</code>
+                        📛 <b>Nome:</b> %s
+                        📧 <b>Email:</b> %s
+                        🔐 <b>Senha:</b> ***********
+                        🤖 <b>Telegram ID:</b> <code>%s</code>
+                        
+                        Você pode editar suas informações ou excluir sua conta abaixo 👇""",
+                safe(user.getId()),
+                safe(user.getName()),
+                safe(user.getEmail()),
+                safe(user.getTelegramId())
+        );
+
         return EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)
-                .text("⚠\uFE0F Tem certeza de que deseja excluir seu usuário? Essa ação não pode ser desfeita.")
-                .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("\uD83D\uDDD1\uFE0F Excluir usuário", BotAction.DELETE_USER.getActionName())))
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.MANEGE_USER.getActionName())))
-                        .build())
+                .text(informationUser)
+                .replyMarkup(MenuUtils.createManegeUserKeyboard())
+                .parseMode("HTML")
                 .build();
+    }
+
+    private String safe(String value) {
+        return (value == null || value.isBlank()) ? "—" : value;
     }
 }

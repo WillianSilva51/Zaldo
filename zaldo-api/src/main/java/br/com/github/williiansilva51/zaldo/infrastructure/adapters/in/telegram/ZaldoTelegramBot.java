@@ -115,9 +115,7 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         }
     }
 
-    private void clearActiveKeyboard(Long chatId) {
-        FlowContext context = sessionManager.get(chatId);
-
+    private void clearActiveKeyboard(Long chatId, FlowContext context) {
         if (context.getLastMessageId() != null) {
             removeKeyboard(chatId, context.getLastMessageId());
             context.setLastMessageId(null);
@@ -129,11 +127,12 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         String text = message.getText();
         String telegramId = message.getFrom().getId().toString();
         Long chatId = message.getChatId();
-        String userName = message.getFrom().getUserName();
-
-        clearActiveKeyboard(chatId);
+        String userName = null;
 
         FlowContext context = sessionManager.get(chatId);
+
+        clearActiveKeyboard(chatId, context);
+
         User user = userCacheService.getAuthenticatedUser(telegramId, chatId);
 
         if (user != null && context.getChatState() != ChatState.IDLE) {
@@ -152,6 +151,9 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         BotApiMethod<?> sendMessage;
 
         if (handler != null) {
+            if (user != null) {
+                userName = user.getName();
+            }
             sendMessage = handler.execute(message, userName);
         } else {
             if (user == null) {
@@ -185,7 +187,9 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
                         .showAlert(true)
                         .text("⏳ Esta ação expirou. Use os botões mais recentes.")
                         .build());
-            } catch (TelegramApiException ignored) {
+            } catch (TelegramApiException e) {
+                log.debug("Falha ao responder callback query expirada. chatId={}, messageId={}, callbackQueryId={}",
+                        chatId, callbackMessageId, callbackQuery.getId(), e);
             }
             removeKeyboard(chatId, callbackMessageId);
             return;

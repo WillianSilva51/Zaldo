@@ -57,12 +57,26 @@ public class MenuUtils {
     }
 
     public static InlineKeyboardMarkup createConfigKeyboard() {
-        InlineKeyboardButton btnLogin = createButton("\uD83D\uDD10 Login (Acesso Web)", BotAction.LOGIN.getActionName());
-        InlineKeyboardButton btnDeleteUser = createButton("⚠\uFE0F Deletar Usuário", BotAction.CONFIRM_DELETE_USER.getActionName());
+        InlineKeyboardButton btnUser = createButton("\uD83D\uDC64 Gerenciar conta", BotAction.MANEGE_USER.build());
+        InlineKeyboardButton btnCategories = createButton("\uD83D\uDDC2\uFE0F Categorias (em breve)", BotAction.MANEGE_CATEGORY.getActionName());
         InlineKeyboardButton btnReturn = createBackButton(BotAction.MAIN_MENU.getActionName());
 
         return InlineKeyboardMarkup.builder()
-                .keyboardRow(new InlineKeyboardRow(btnLogin, btnDeleteUser))
+                .keyboardRow(new InlineKeyboardRow(btnUser))
+                .keyboardRow(new InlineKeyboardRow(btnCategories))
+                .keyboardRow(new InlineKeyboardRow(btnReturn))
+                .build();
+    }
+
+    public static InlineKeyboardMarkup createManegeUserKeyboard() {
+        //     InlineKeyboardButton btnLogin = createButton("\uD83D\uDD10 Login (Acesso Web)", BotAction.LOGIN.getActionName());
+        InlineKeyboardButton btnEditUser = createButton("✏\uFE0F Editar dados", BotAction.EDIT_USER.getActionName());
+        InlineKeyboardButton btnDeleteUser = createButton("⚠\uFE0F Deletar conta", BotAction.CONFIRM_DELETE_USER.getActionName());
+        InlineKeyboardButton btnReturn = createBackButton(BotAction.CONFIG.getActionName());
+
+        return InlineKeyboardMarkup.builder()
+                .keyboardRow(new InlineKeyboardRow(btnEditUser))
+                .keyboardRow(new InlineKeyboardRow(btnDeleteUser))
                 .keyboardRow(new InlineKeyboardRow(btnReturn))
                 .build();
     }
