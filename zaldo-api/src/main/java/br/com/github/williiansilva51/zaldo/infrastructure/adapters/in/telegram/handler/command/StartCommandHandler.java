@@ -28,6 +28,7 @@ public class StartCommandHandler implements TelegramCommandHandler {
     public BotApiMethod<?> execute(Message message, String username) {
         String telegramId = message.getFrom().getId().toString();
         Long chatId = message.getChatId();
+        username = message.getFrom().getUserName() != null ? message.getFrom().getUserName() : "user:" + telegramId;
 
         Optional<User> userOptional = findUserByTelegramIdUseCase.execute(telegramId);
         String messageAnswer;
@@ -35,7 +36,7 @@ public class StartCommandHandler implements TelegramCommandHandler {
         if (userOptional.isEmpty()) {
             User newUser = User.builder()
                     .telegramId(telegramId)
-                    .name(username).email(telegramId.repeat(2) + "@telegram.zaldo")
+                    .name(username).email(telegramId + "@telegram.zaldo")
                     .password(UUID.randomUUID().toString())
                     .build();
             createUserUseCase.execute(newUser);

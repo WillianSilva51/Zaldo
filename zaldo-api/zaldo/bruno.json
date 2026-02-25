@@ -6,10 +6,10 @@
     "node_modules",
     ".git"
   ],
-  "size": 0.0020208358764648438,
-  "filesCount": 8,
+  "size": 0.0060634613037109375,
+  "filesCount": 21,
   "presets": {
     "requestType": "http",
-    "requestUrl": "http://localhost:8080"
+    "requestUrl": "http://localhost:8080/api"
   }
 }

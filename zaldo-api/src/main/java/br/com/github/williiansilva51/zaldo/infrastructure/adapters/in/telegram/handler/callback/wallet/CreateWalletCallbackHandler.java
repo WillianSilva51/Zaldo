@@ -9,7 +9,7 @@ import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.u
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
@@ -27,11 +27,13 @@ public class CreateWalletCallbackHandler implements TelegramCallbackHandler {
     @Override
     public BotApiMethod<?> execute(CallbackQuery callbackQuery, User user) {
         Long chatId = callbackQuery.getMessage().getChatId();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
 
         sessionManager.setChatState(chatId, ChatState.WAITING_WALLET_NAME);
 
-        return SendMessage.builder()
+        return EditMessageText.builder()
                 .chatId(chatId)
+                .messageId(messageId)
                 .text("Digite o nome da sua carteira:")
                 .replyMarkup(InlineKeyboardMarkup.builder()
                         .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.LIST_WALLETS.build(0))))

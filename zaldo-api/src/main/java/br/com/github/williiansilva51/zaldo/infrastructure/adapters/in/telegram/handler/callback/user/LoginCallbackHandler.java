@@ -36,7 +36,7 @@ public class LoginCallbackHandler implements TelegramCallbackHandler {
                 .messageId(messageId)
                 .text("Ótimo! Digite o <b>e-mail</b> que você deseja usar para o acesso Web:")
                 .replyMarkup(InlineKeyboardMarkup.builder().keyboardRow(new InlineKeyboardRow(MenuUtils
-                                .createBackButton(BotAction.MAIN_MENU.getActionName())))
+                                .createBackButton(BotAction.MANEGE_USER.getActionName())))
                         .build())
                 .parseMode("HTML")
                 .build();

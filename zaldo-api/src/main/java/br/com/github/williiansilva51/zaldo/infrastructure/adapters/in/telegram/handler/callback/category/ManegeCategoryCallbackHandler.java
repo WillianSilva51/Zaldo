@@ -1,10 +1,9 @@
-package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.user;
+package br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.category;
 
 import br.com.github.williiansilva51.zaldo.core.domain.User;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.enums.BotAction;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.handler.callback.TelegramCallbackHandler;
 import br.com.github.williiansilva51.zaldo.infrastructure.adapters.in.telegram.utils.MenuUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.botapimethods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -13,12 +12,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardRow;
 
 @Component
-@RequiredArgsConstructor
-public class ConfirmDeleteUserCallbackHandler implements TelegramCallbackHandler {
-
+public class ManegeCategoryCallbackHandler implements TelegramCallbackHandler {
     @Override
     public String getActionName() {
-        return BotAction.CONFIRM_DELETE_USER.getActionName();
+        return BotAction.MANEGE_CATEGORY.getActionName();
     }
 
     @Override
@@ -26,14 +23,28 @@ public class ConfirmDeleteUserCallbackHandler implements TelegramCallbackHandler
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
+        String text = """
+                🗂️ <b>Gerenciar categorias</b>
+                
+                🚧 <i>Funcionalidade em desenvolvimento</i>
+                
+                Em breve você poderá:
+                ➕ Criar categorias
+                ✏️ Editar categorias
+                ❌ Remover categorias
+                🧩 Organizar seus registros
+                
+                Volte em breve! 🚀
+                """;
+
         return EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)
-                .text("⚠\uFE0F Tem certeza de que deseja excluir seu usuário? Essa ação não pode ser desfeita.")
+                .text(text)
                 .replyMarkup(InlineKeyboardMarkup.builder()
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createButton("\uD83D\uDDD1\uFE0F Excluir usuário", BotAction.DELETE_USER.getActionName())))
-                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.MANEGE_USER.getActionName())))
+                        .keyboardRow(new InlineKeyboardRow(MenuUtils.createBackButton(BotAction.CONFIG.getActionName())))
                         .build())
+                .parseMode("HTML")
                 .build();
     }
 }

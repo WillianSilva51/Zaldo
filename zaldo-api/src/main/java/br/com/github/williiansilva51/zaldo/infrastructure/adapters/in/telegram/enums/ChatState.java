@@ -4,6 +4,7 @@ public enum ChatState {
     IDLE, //Livre
 
     //Fluxo de Login
+    WAITING_USERNAME,
     WAITING_LOGIN_EMAIL,
     WAITING_LOGIN_PASSWORD,
 
