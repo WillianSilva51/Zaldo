@@ -44,6 +44,14 @@ api:
       secret: ${TOKEN_JWT:345345fsdf345345sdfsdf345345sdfsdfgsdfg345345}
       bot: ${TOKEN_TELEGRAM_BOT}
 
+scalar:
+  path: /docs
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
 zaldo:
   wallet:
     limit: 10

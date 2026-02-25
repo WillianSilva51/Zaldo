@@ -127,7 +127,6 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
         String text = message.getText();
         String telegramId = message.getFrom().getId().toString();
         Long chatId = message.getChatId();
-        String userName = null;
 
         FlowContext context = sessionManager.get(chatId);
 
@@ -150,10 +149,10 @@ public class ZaldoTelegramBot implements SpringLongPollingBot, LongPollingSingle
 
         BotApiMethod<?> sendMessage;
 
+
+        String userName = user != null ? user.getName() : message.getFrom().getUserName();
+
         if (handler != null) {
-            if (user != null) {
-                userName = user.getName();
-            }
             sendMessage = handler.execute(message, userName);
         } else {
             if (user == null) {
